@@ -12,6 +12,7 @@ def _smtp_config():
         "user": os.getenv("SMTP_USER", ""),
         "password": os.getenv("SMTP_PASS", ""),
         "from_email": os.getenv("FROM_EMAIL", os.getenv("SMTP_USER", "")),
+        "timeout": float(os.getenv("SMTP_TIMEOUT", "10")),
     }
 
 
@@ -32,7 +33,7 @@ def send_email(to_email, subject, body, enabled=True):
     msg.attach(MIMEText(body, "plain"))
 
     try:
-        with smtplib.SMTP(cfg["host"], cfg["port"]) as server:
+        with smtplib.SMTP(cfg["host"], cfg["port"], timeout=cfg["timeout"]) as server:
             server.starttls()
             server.login(cfg["user"], cfg["password"])
             server.sendmail(cfg["from_email"], to_email, msg.as_string())
