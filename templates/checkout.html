@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 style="margin: 30px 0;">Checkout</h1>
+    <div class="checkout-container">
+        <div class="checkout-form">
+            <h3>Delivery Information</h3>
+            <form method="POST" id="checkout-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input type="text" name="country" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" name="state" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Area</label>
+                        <input type="text" name="area" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Bus Stop</label>
+                        <input type="text" name="bus_stop" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" name="delivery_phone" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Home Address</label>
+                    <textarea name="address" id="address" required></textarea>
+                    <small style="display:block; margin-top:6px; color: var(--text-light);">We will try to locate this address on the map.</small>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Distance (km)</label>
+                        <input type="number" name="distance_km" id="distance_km" min="0" step="0.1" value="0" required readonly>
+                        <small style="display:block; margin-top:6px; color: var(--text-light);">Auto-calculated from map. If location fails, you can edit.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Map Link (optional)</label>
+                        <input type="text" name="map_url" id="map_url" placeholder="Generated from map">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Pick Location on Map</label>
+                    <div id="delivery-map" style="height: 320px; border-radius: 14px; border: 1px solid var(--border-color);"></div>
+                    <small style="display:block; margin-top:6px; color: var(--text-light);">Click the map to set your delivery point or allow location access.</small>
+                </div>
+                <button class="checkout-btn" type="submit">Place Order</button>
+            </form>
+        </div>
+        <div class="cart-summary">
+            <h3>Order Summary</h3>
+            {% if company %}
+            <div class="summary-row">
+                <span>Pickup</span>
+                <span>{{ company.name }}</span>
+            </div>
+            {% if company.pickup_address %}
+            <div class="summary-row">
+                <span>Pickup Address</span>
+                <span>{{ company.pickup_address }}</span>
+            </div>
+            {% endif %}
+            {% endif %}
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>₦{{ "{:,.0f}".format(subtotal) }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Total Weight</span>
+                <span>{{ total_weight_grams }} g</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span id="shipping_fee">₦{{ "{:,.0f}".format(shipping_fee) }}</span>
+            </div>
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span id="order_total">₦{{ "{:,.0f}".format(total) }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    (function () {
+        const distanceInput = document.getElementById('distance_km');
+        const shippingEl = document.getElementById('shipping_fee');
+        const totalEl = document.getElementById('order_total');
+        const mapUrlInput = document.getElementById('map_url');
+        const addressInput = document.getElementById('address');
+        if (!distanceInput || !shippingEl || !totalEl) return;
+        const subtotal = {{ subtotal|tojson }};
+        const totalWeight = {{ total_weight_grams|tojson }};
+        const ratePerGram = {{ rate_per_gram|tojson }};
+        const ratePerKm = {{ rate_per_km|tojson }};
+        const storeLat = {{ store_lat|tojson }};
+        const storeLng = {{ store_lng|tojson }};
+
+        const formatMoney = (n) => {
+            try { return new Intl.NumberFormat('en-NG').format(Math.round(n)); } catch (e) { return Math.round(n); }
+        };
+
+        const recalc = () => {
+            const km = parseFloat(distanceInput.value || "0");
+            const shipping = (totalWeight * ratePerGram) + (km * ratePerKm);
+            const total = subtotal + shipping;
+            shippingEl.textContent = `₦${formatMoney(shipping)}`;
+            totalEl.textContent = `₦${formatMoney(total)}`;
+        };
+
+        const toRad = (v) => (v * Math.PI) / 180;
+        const haversineKm = (lat1, lon1, lat2, lon2) => {
+            const R = 6371;
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        };
+
+        const map = L.map('delivery-map').setView([storeLat || 0, storeLng || 0], storeLat && storeLng ? 12 : 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let destMarker = null;
+
+        const setDestination = (lat, lng) => {
+            if (destMarker) destMarker.remove();
+            destMarker = L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 13);
+            const km = storeLat && storeLng ? haversineKm(storeLat, storeLng, lat, lng) : 0;
+            distanceInput.value = km.toFixed(2);
+            if (mapUrlInput) {
+                mapUrlInput.value = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`;
+            }
+            recalc();
+        };
+
+        map.on('click', (e) => {
+            setDestination(e.latlng.lat, e.latlng.lng);
+        });
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const { latitude, longitude } = pos.coords;
+                    setDestination(latitude, longitude);
+                },
+                () => {}
+            );
+        }
+
+        let geocodeTimer = null;
+        const geocodeAddress = () => {
+            const q = (addressInput && addressInput.value || "").trim();
+            if (!q) return;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}`)
+                .then((r) => r.json())
+                .then((results) => {
+                    if (!results || !results.length) return;
+                    const first = results[0];
+                    setDestination(parseFloat(first.lat), parseFloat(first.lon));
+                })
+                .catch(() => {});
+        };
+
+        if (addressInput) {
+            addressInput.addEventListener('input', () => {
+                clearTimeout(geocodeTimer);
+                geocodeTimer = setTimeout(geocodeAddress, 800);
+            });
+        }
+
+        distanceInput.addEventListener('input', recalc);
+        recalc();
+    })();
+</script>
+{% endblock %}

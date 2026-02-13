@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="admin-panel" style="margin: 30px 0;">
+        {% set image_src = product.image_url %}
+        {% if image_src and image_src.startswith('uploads/') %}
+            {% set image_src = url_for('static', filename=image_src) %}
+        {% endif %}
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items:start;">
+            <img src="{{ image_src or url_for('static', filename='images/headphones.jpg') }}" class="product-img" alt="{{ product.name }}" style="height:360px;">
+            <div>
+                <h2>{{ product.name }}</h2>
+                <div class="product-price" style="margin: 12px 0;">
+                    <span class="current-price">₦{{ "{:,.0f}".format(product.sale_price or product.price) }}</span>
+                    {% if product.sale_price %}
+                        <span class="original-price">₦{{ "{:,.0f}".format(product.price) }}</span>
+                    {% endif %}
+                </div>
+                <p style="color: var(--text-light);">{{ product.description or 'No description provided.' }}</p>
+                <div class="product-modal-specs" style="margin-top: 16px;">
+                    <h4>Details</h4>
+                    <div class="spec-item"><span>Stock</span><span>{{ product.stock }}</span></div>
+                    <div class="spec-item"><span>Weight</span><span>{{ product.weight_grams or 0 }} g</span></div>
+                    <div class="spec-item"><span>Size</span><span>{{ product.size_desc or 'N/A' }}</span></div>
+                    <div class="spec-item"><span>Company</span><span>{{ product.company.name if product.company else 'N/A' }}</span></div>
+                    {% if product.company and product.company.description %}
+                        <div class="spec-item"><span>Company Info</span><span>{{ product.company.description }}</span></div>
+                    {% endif %}
+                    {% if product.company and product.company.pickup_address %}
+                        <div class="spec-item"><span>Pickup Address</span><span>{{ product.company.pickup_address }}</span></div>
+                    {% endif %}
+                </div>
+                <form method="POST" action="{{ url_for('shop.add_to_cart', product_id=product.id) }}" style="margin-top: 16px;">
+                    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                        <input class="quantity-input" type="number" name="quantity" value="1" min="1">
+                        <button class="checkout-btn" type="submit">Add to Cart</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

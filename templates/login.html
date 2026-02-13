@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="auth-wrap">
+        <div class="auth-hero">
+            <h2>Welcome back to <span class="brand-pulse">Abils</span></h2>
+            <p>Log in to manage your store, track orders, and enjoy a smooth checkout experience.</p>
+        </div>
+        <form method="POST" class="checkout-form auth-card">
+            <h3>Login</h3>
+            <div class="form-group">
+                <label>Email or Username</label>
+                <input type="text" name="email_or_username" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+                <div class="password-meter" data-level="0">
+                    <span class="password-meter-bar"></span>
+                </div>
+                <div class="password-meter-text">Strength: enter password</div>
+            </div>
+            <button class="checkout-btn" type="submit">Login</button>
+            <div class="auth-links">
+                <a href="{{ url_for('auth.register') }}">Create account</a>
+                <a href="{{ url_for('auth.forgot_password') }}">Forgot password?</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

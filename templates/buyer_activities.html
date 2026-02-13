@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 style="margin: 30px 0;">My Activities</h1>
+    <div class="admin-panel">
+        <div class="activity-header">
+            <h3>Recent Activities</h3>
+        </div>
+        <form id="mark-seen-form" method="POST" action="{{ url_for('auth.mark_buyer_activities_seen') }}"></form>
+        <div class="activity-panel open" id="activity-panel">
+            <ul class="admin-activity-list">
+                {% for activity in activities %}
+                    <li class="admin-activity-item">
+                        <strong>{{ activity.created_at.strftime('%Y-%m-%d') }}</strong><br>
+                        {{ activity.action }}{% if activity.detail %}: {{ activity.detail }}{% endif %}
+                    </li>
+                {% endfor %}
+                {% if activities|length == 0 %}
+                    <li class="admin-activity-item">No activities found.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

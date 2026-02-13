@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container manager-dashboard">
+    <div class="page-header">
+        <div>
+            <h1>Manager Dashboard</h1>
+            <p class="page-subtitle">Overview of operations, payouts, and delivery setup.</p>
+        </div>
+    </div>
+
+    <div class="stats-grid manager-stats">
+        <div class="stat-card">
+            <h4>Company Balance</h4>
+            <p>₦{{ "{:,.0f}".format(company.wallet_balance if company else 0) }}</p>
+        </div>
+        <div class="stat-card">
+            <h4>Total Products</h4>
+            <p>{{ products|length }}</p>
+        </div>
+        <div class="stat-card">
+            <h4>Total Orders</h4>
+            <p>{{ orders|length }}</p>
+        </div>
+    </div>
+
+    <div class="admin-actions manager-actions">
+        <a class="btn btn-primary" href="{{ url_for('manager.add_product') }}">Add Product</a>
+        <a class="btn btn-primary" href="{{ url_for('manager.manage_products') }}">Manage Products</a>
+        <a class="btn btn-primary" href="{{ url_for('manager.reports') }}">Daily Reports</a>
+        <a class="btn btn-primary" href="{{ url_for('manager.daily_statement_pdf') }}">Daily Statement (PDF)</a>
+        <button class="btn btn-primary" type="button" id="pickup-toggle">Pickup Location</button>
+    </div>
+
+    <div class="admin-panel activity-panel manager-panel" id="pickup-panel">
+        <div class="panel-header">
+            <h3>Pickup Location</h3>
+            <span class="panel-hint">Set your company pickup point for distance calculations.</span>
+        </div>
+        <form method="POST" action="{{ url_for('manager.update_pickup_location') }}" class="checkout-form" style="max-width: 100%;">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" name="pickup_country" value="{{ company.pickup_country or '' }}">
+                </div>
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" name="pickup_state" value="{{ company.pickup_state or '' }}">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Area</label>
+                    <input type="text" name="pickup_area" value="{{ company.pickup_area or '' }}">
+                </div>
+                <div class="form-group">
+                    <label>Bus Stop</label>
+                    <input type="text" name="pickup_bus_stop" value="{{ company.pickup_bus_stop or '' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Pickup Address</label>
+                <textarea name="pickup_address" id="pickup_address">{{ company.pickup_address or '' }}</textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pickup Latitude</label>
+                    <input type="text" name="pickup_lat" id="pickup_lat" value="{{ company.pickup_lat if company.pickup_lat is not none else '' }}">
+                </div>
+                <div class="form-group">
+                    <label>Pickup Longitude</label>
+                    <input type="text" name="pickup_lng" id="pickup_lng" value="{{ company.pickup_lng if company.pickup_lng is not none else '' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Pickup Map Link (optional)</label>
+                <input type="text" name="pickup_map_url" id="pickup_map_url" value="{{ company.pickup_map_url or '' }}">
+            </div>
+            <div class="form-group">
+                <label>Select Pickup on Map</label>
+                <div id="pickup-map" style="height: 320px; border-radius: 14px; border: 1px solid var(--border-color);"></div>
+                <small style="display:block; margin-top:6px; color: var(--text-light);">Click map to set pickup location or allow location access.</small>
+            </div>
+            <button class="checkout-btn" type="submit">Save Pickup Location</button>
+        </form>
+    </div>
+
+    <div class="admin-panel manager-panel">
+        <div class="panel-header">
+            <h3>Discount Requests</h3>
+            <span class="panel-hint">Approve special rates for loyal buyers.</span>
+        </div>
+        <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <tr>
+                <th>Buyer ID</th>
+                <th>Action</th>
+            </tr>
+            {% for req in discount_requests %}
+            <tr>
+                <td>{{ buyer_map.get(req.buyer_id, req.buyer_id) }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('manager.approve_discount', request_id=req.id) }}" style="display:inline-block;">
+                        <input type="number" name="discount_rate" value="10" min="0" max="90" style="width:80px;">
+                        <button class="btn btn-success" type="submit">Approve</button>
+                    </form>
+                    <a class="btn btn-danger" href="{{ url_for('manager.reject_discount', request_id=req.id) }}">Reject</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
+
+
+    <div class="manager-grid">
+        <div class="admin-panel manager-panel">
+            <div class="panel-header">
+                <h3>Request Payout</h3>
+                <span class="panel-hint">Withdraw funds to your preferred account.</span>
+            </div>
+            <form method="POST" action="{{ url_for('manager.request_payout') }}" class="checkout-form" style="max-width: 100%;">
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" name="amount" min="1" required>
+                </div>
+                <button class="checkout-btn" type="submit">Submit Payout Request</button>
+            </form>
+        </div>
+
+        <div class="admin-panel manager-panel">
+            <div class="panel-header">
+                <h3>OPay Status</h3>
+                <span class="panel-hint">Check payment status for an order.</span>
+            </div>
+            <form method="POST" action="{{ url_for('manager.manager_opay_status') }}" class="checkout-form" style="max-width: 100%;">
+                <div class="form-group">
+                    <label>Order ID</label>
+                    <input type="number" name="order_id" required>
+                </div>
+                <button class="checkout-btn" type="submit">Check Status</button>
+            </form>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    (function () {
+        const mapEl = document.getElementById('pickup-map');
+        const latInput = document.getElementById('pickup_lat');
+        const lngInput = document.getElementById('pickup_lng');
+        const addrInput = document.getElementById('pickup_address');
+        const mapUrlInput = document.getElementById('pickup_map_url');
+        if (!mapEl || !latInput || !lngInput) return;
+
+        const parseNum = (v) => {
+            const n = parseFloat(v);
+            return Number.isFinite(n) ? n : null;
+        };
+        const startLat = parseNum(latInput.value) || 0;
+        const startLng = parseNum(lngInput.value) || 0;
+
+        const map = L.map('pickup-map').setView([startLat, startLng], startLat && startLng ? 12 : 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker = null;
+        const setPickup = (lat, lng) => {
+            if (marker) marker.remove();
+            marker = L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 13);
+            latInput.value = lat.toFixed(6);
+            lngInput.value = lng.toFixed(6);
+            if (mapUrlInput) {
+                mapUrlInput.value = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`;
+            }
+        };
+
+        map.on('click', (e) => {
+            setPickup(e.latlng.lat, e.latlng.lng);
+        });
+
+        if (startLat && startLng) {
+            setPickup(startLat, startLng);
+        } else if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    setPickup(pos.coords.latitude, pos.coords.longitude);
+                },
+                () => {}
+            );
+        }
+
+        let geocodeTimer = null;
+        const geocodeAddress = () => {
+            if (!addrInput) return;
+            const q = (addrInput.value || "").trim();
+            if (!q) return;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}`)
+                .then((r) => r.json())
+                .then((results) => {
+                    if (!results || !results.length) return;
+                    const first = results[0];
+                    setPickup(parseFloat(first.lat), parseFloat(first.lon));
+                })
+                .catch(() => {});
+        };
+
+        if (addrInput) {
+            addrInput.addEventListener('input', () => {
+                clearTimeout(geocodeTimer);
+                geocodeTimer = setTimeout(geocodeAddress, 800);
+            });
+        }
+
+        const pickupToggle = document.getElementById('pickup-toggle');
+        const pickupPanel = document.getElementById('pickup-panel');
+        if (pickupToggle && pickupPanel) {
+            pickupToggle.addEventListener('click', () => {
+                const isOpen = pickupPanel.classList.toggle('open');
+                if (isOpen) {
+                    setTimeout(() => map.invalidateSize(), 50);
+                }
+            });
+        }
+    })();
+</script>
+{% endblock %}

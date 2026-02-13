@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Activity Logs</h2>
+    <div style="margin-bottom: 15px;">
+        <a class="btn btn-primary" href="{{ url_for('admin.activities', type='all') }}">All</a>
+        <a class="btn btn-primary" href="{{ url_for('admin.activities', type='money') }}">Money</a>
+        <a class="btn btn-primary" href="{{ url_for('admin.activities', type='auth') }}">Auth</a>
+    </div>
+    <table class="admin-table">
+        <tr>
+            <th>Time</th>
+            <th>Action</th>
+            <th>Detail</th>
+            <th>Company</th>
+            <th>Actor</th>
+        </tr>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ log.action }}</td>
+            <td>{{ log.detail }}</td>
+            <td>
+                {% if log.company_id %}
+                    {{ company_map.get(log.company_id, log.company_id) }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>{{ log.actor_id or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

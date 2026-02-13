@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 style="margin: 30px 0;">Payment</h1>
+    <p>Order #{{ order.id }} | Total: ₦{{ "{:,.0f}".format(order.total_amount) }}</p>
+    <form method="POST" class="checkout-form" style="max-width: 600px;">
+        <div class="form-group">
+            <label>Available Payment Methods</label>
+            <div class="method-grid">
+                <label class="method-card">
+                    <input type="radio" name="payment_method" value="paystack" required>
+                    <span class="method-title">Paystack</span>
+                    <span class="method-subtitle">Card / Bank Transfer</span>
+                </label>
+                <label class="method-card">
+                    <input type="radio" name="payment_method" value="flutterwave" required>
+                    <span class="method-title">Flutterwave</span>
+                    <span class="method-subtitle">Card / Bank Transfer</span>
+                </label>
+                <label class="method-card">
+                    <input type="radio" name="payment_method" value="bank_transfer" required>
+                    <span class="method-title">Bank Transfer</span>
+                    <span class="method-subtitle">Manual Confirmation</span>
+                </label>
+            </div>
+        </div>
+        <button class="checkout-btn" type="submit">Pay Now</button>
+    </form>
+
+    <div class="admin-panel bank-panel" style="margin-top: 24px;">
+        <div class="panel-header">
+            <h3>Available Banks</h3>
+            <span class="panel-hint">Select your bank for transfer.</span>
+        </div>
+        <div class="bank-grid">
+            <div class="bank-card">
+                <span>Access Bank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>First Bank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>GTBank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>UBA</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>Zenith Bank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>Fidelity Bank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>Union Bank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>Sterling Bank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>Wema Bank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>Polaris Bank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>Stanbic IBTC</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+            <div class="bank-card">
+                <span>Ecobank</span>
+                <span class="bank-status unavailable">Unavailable</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title or "Abils Mall" }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3">
+</head>
+<body>
+    <header class="site-header">
+        <div class="top-bar">
+            <p>Free shipping on orders over ₦75,000 | New user discount: 10% off</p>
+        </div>
+        <nav class="main-nav">
+            <a href="{{ url_for('home') }}" class="logo">Abils Mall</a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                {% if current_user.is_authenticated and current_user.role == 'buyer' %}
+                    <a href="{{ url_for('shop.products') }}">Shop</a>
+                    <a href="{{ url_for('shop.cart') }}">Cart</a>
+                    <a href="{{ url_for('shop.orders') }}">Orders</a>
+                    <a href="{{ url_for('shop.wallet') }}">Wallet</a>
+                {% endif %}
+                {% if current_user.is_authenticated and current_user.role == 'manager' %}
+                    <a href="{{ url_for('manager.dashboard') }}">Manager</a>
+                    <a href="{{ url_for('manager.reports') }}">Reports</a>
+                {% endif %}
+                {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin.dashboard') }}">Admin</a>
+                    <a href="{{ url_for('admin.reports') }}">Reports</a>
+                {% endif %}
+            </div>
+            <div class="nav-icons">
+                <button class="mode-toggle" id="mode-toggle">Dark Mode</button>
+                {% if current_user.is_authenticated %}
+                    <div class="user-chip">
+                        {% if current_user.avatar_path %}
+                            <img class="user-avatar" src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.username }} avatar">
+                        {% else %}
+                            <img class="user-avatar" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ current_user.username }} avatar">
+                        {% endif %}
+                        <span class="user-name">{{ current_user.username }}</span>
+                    </div>
+                    <a href="{{ url_for('auth.profile') }}" class="user-icon">Profile</a>
+                    <a href="{{ url_for('auth.change_password') }}" class="user-icon">Change Password</a>
+                    {% if current_user.role in ['admin', 'manager', 'buyer'] %}
+                        {% if current_user.role == 'admin' %}
+                            {% set activity_target = url_for('admin.dashboard') %}
+                        {% elif current_user.role == 'manager' %}
+                            {% set activity_target = url_for('manager.activities') %}
+                        {% else %}
+                            {% set activity_target = url_for('auth.activities') %}
+                        {% endif %}
+                        <button class="bell-btn{% if unread_count is defined and (unread_count|int) > 0 %} bell-animate{% endif %}" id="activity-bell" type="button" aria-label="Show activities" aria-expanded="false" data-activity-target="{{ activity_target }}">
+                            <span class="bell-icon" aria-hidden="true"><i class="fas fa-bell"></i></span>
+                            {% if unread_count is defined and (unread_count|int) > 0 %}
+                                <span class="bell-badge" id="activity-badge">{{ unread_count }}</span>
+                            {% endif %}
+                        </button>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}" class="user-icon">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="user-icon">Login</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                        {% for category, message in messages %}
+                            <div class="notification {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="layout {% if not current_user.is_authenticated %}no-sidebar{% endif %}">
+            {% if current_user.is_authenticated %}
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-title">Portal</div>
+                {% if current_user.role == 'admin' %}
+                    <details open class="sidebar-group">
+                        <summary><i class="fas fa-shield-alt"></i> Admin</summary>
+                        <a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+                        <a href="{{ url_for('admin.users') }}"><i class="fas fa-users"></i> Users</a>
+                        <a href="{{ url_for('admin.orders') }}"><i class="fas fa-receipt"></i> Orders</a>
+                        <a href="{{ url_for('admin.bank_transfers') }}"><i class="fas fa-university"></i> Bank Transfers</a>
+                        <a href="{{ url_for('admin.payouts') }}"><i class="fas fa-wallet"></i> Payouts</a>
+                        <a href="{{ url_for('admin.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+                        <a href="{{ url_for('admin.activities') }}"><i class="fas fa-clipboard-list"></i> Activities</a>
+                        <a href="{{ url_for('admin.analytics') }}"><i class="fas fa-chart-bar"></i> Analytics</a>
+                    </details>
+                {% elif current_user.role == 'manager' %}
+                    <details open class="sidebar-group">
+                        <summary><i class="fas fa-briefcase"></i> Manager</summary>
+                        <a href="{{ url_for('manager.dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+                        <a href="{{ url_for('manager.manage_products') }}"><i class="fas fa-boxes"></i> Manage Products</a>
+                        <a href="{{ url_for('manager.add_product') }}"><i class="fas fa-box"></i> Add Product</a>
+                        <a href="{{ url_for('manager.reports') }}"><i class="fas fa-file-alt"></i> Reports</a>
+                        <a href="{{ url_for('manager.daily_statement_pdf') }}"><i class="fas fa-file-pdf"></i> Statement PDF</a>
+                        <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+                    </details>
+                {% else %}
+                    <details open class="sidebar-group">
+                        <summary><i class="fas fa-shopping-bag"></i> Buyer</summary>
+                        <a href="{{ url_for('shop.products') }}"><i class="fas fa-store"></i> Shop</a>
+                        <a href="{{ url_for('shop.cart') }}"><i class="fas fa-shopping-cart"></i> Cart</a>
+                        <a href="{{ url_for('shop.orders') }}"><i class="fas fa-receipt"></i> Orders</a>
+                        <a href="{{ url_for('shop.wallet') }}"><i class="fas fa-wallet"></i> Wallet</a>
+                        <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+                    </details>
+                {% endif %}
+            </aside>
+            {% endif %}
+            <section class="content">
+                {% block content %}{% endblock %}
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const toggle = document.getElementById('mode-toggle');
+        if (toggle) {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') document.body.classList.add('dark-mode');
+            toggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+        }
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        if (sidebarToggle && sidebar) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+        }
+        const navToggle = document.getElementById('nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        if (navToggle && navLinks) {
+            navToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('open');
+            });
+        }
+        const bell = document.getElementById('activity-bell');
+        if (bell) {
+            bell.addEventListener('click', () => {
+                const panel = document.getElementById('activity-panel');
+                const badge = document.getElementById('activity-badge');
+                const seenForm = document.getElementById('mark-seen-form');
+                if (!panel) {
+                    const target = bell.getAttribute('data-activity-target');
+                    if (target) {
+                        window.location.href = target;
+                    }
+                    return;
+                }
+                const isOpen = panel.classList.toggle('open');
+                bell.setAttribute('aria-expanded', String(isOpen));
+                if (isOpen && badge && seenForm) {
+                    seenForm.submit();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

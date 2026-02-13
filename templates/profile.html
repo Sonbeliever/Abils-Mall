@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Profile & Notifications</h2>
+    <div class="profile-header">
+        {% if current_user.avatar_path %}
+            <img class="user-avatar user-avatar-lg" src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.username }} avatar">
+        {% else %}
+            <img class="user-avatar user-avatar-lg" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ current_user.username }} avatar">
+        {% endif %}
+        <div class="profile-meta">
+            <h3>{{ current_user.username }}</h3>
+            <p>{{ current_user.email }}</p>
+        </div>
+    </div>
+    <form method="POST" class="checkout-form" style="max-width: 600px;" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Display Picture (DP)</label>
+            <input type="file" name="avatar" accept="image/*">
+            <small style="display:block; margin-top:6px; color: var(--text-light);">Square crop applied automatically. Max 2MB.</small>
+        </div>
+        {% if current_user.avatar_path %}
+        <div class="form-group">
+            <label><input type="checkbox" name="remove_avatar"> Remove current DP</label>
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" value="{{ current_user.email }}" disabled>
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="text" name="phone" value="{{ current_user.phone or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Notification Preferences</label>
+            <div style="display:flex; gap:20px; align-items:center;">
+                <label><input type="checkbox" name="notify_email" {% if current_user.notify_email %}checked{% endif %}> Email</label>
+                <label><input type="checkbox" name="notify_sms" {% if current_user.notify_sms %}checked{% endif %}> SMS</label>
+            </div>
+        </div>
+        <button class="checkout-btn" type="submit">Save Preferences</button>
+    </form>
+
+</div>
+{% endblock %}

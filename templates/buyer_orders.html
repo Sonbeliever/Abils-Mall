@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">My Orders</h2>
+    <table class="admin-table">
+        <tr>
+            <th>ID</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>₦{{ "{:,.0f}".format(order.total_amount) }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+            <td><a class="btn btn-primary" href="{{ url_for('shop.order_detail', order_id=order.id) }}">View</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

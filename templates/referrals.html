@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Referral Center</h2>
+    <div class="checkout-form" style="max-width: 720px;">
+        <div class="form-group">
+            <label>Your Referral Link</label>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+                <input type="text" id="referral-link" value="{{ referral_link }}" readonly>
+                <button class="btn btn-primary" id="copy-referral" type="button">Copy Link</button>
+            </div>
+            <small style="display:block; margin-top:6px; color: var(--text-light);">Earn {{ token_value }}₦ per token. You get {{ min_tokens }} tokens to withdraw.</small>
+        </div>
+
+        <div class="form-group">
+            <label>Referral Tokens</label>
+            <div style="font-weight:700; font-size:18px;">
+                {{ token_balance }} tokens = ₦{{ "{:,.0f}".format(token_balance * token_value) }}
+            </div>
+            <div class="referral-meter" data-level="{{ progress_level }}">
+                <span class="referral-meter-bar" style="width: {{ progress }}%;"></span>
+            </div>
+            <div class="referral-meter-text">
+                {{ token_balance }} / {{ min_tokens }} tokens
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.referral_withdraw') }}">
+            <button class="btn btn-success" type="submit" {% if token_balance < min_tokens %}disabled{% endif %}>
+                Request Withdrawal
+            </button>
+        </form>
+    </div>
+
+    {% if pending_requests %}
+        <h3 style="margin-top: 30px;">Pending Withdrawals</h3>
+        <ul>
+            {% for req in pending_requests %}
+                <li style="margin-bottom: 10px;">
+                    {{ req.created_at.strftime('%Y-%m-%d') }} - {{ req.tokens }} tokens (₦{{ "{:,.0f}".format(req.amount) }}) - {{ req.status }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h3 style="margin-top: 30px;">Your Referrals</h3>
+    <ul>
+        {% for ref in referrals %}
+            <li style="margin-bottom: 10px;">
+                {{ ref.created_at.strftime('%Y-%m-%d') }} - {{ referred_users.get(ref.referred_id, 'User') }}
+            </li>
+        {% endfor %}
+        {% if referrals|length == 0 %}
+            <li>No referrals yet.</li>
+        {% endif %}
+    </ul>
+</div>
+<script>
+    (function () {
+        const btn = document.getElementById('copy-referral');
+        const input = document.getElementById('referral-link');
+        if (!btn || !input) return;
+        btn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(input.value);
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = 'Copy Link'; }, 1500);
+            } catch (e) {
+                input.select();
+                document.execCommand('copy');
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = 'Copy Link'; }, 1500);
+            }
+        });
+    })();
+</script>
+{% endblock %}

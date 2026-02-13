@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Daily Reports</h2>
+    <form method="POST" class="checkout-form" style="max-width: 700px;" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Report PDF</label>
+            <input type="file" name="report_pdf" accept="application/pdf" required>
+        </div>
+        <div class="form-group">
+            <label>Notes (optional)</label>
+            <textarea name="content" rows="4" placeholder="Optional notes for admin"></textarea>
+        </div>
+        <button class="checkout-btn" type="submit">Submit Report</button>
+    </form>
+
+    <h3 style="margin-top: 30px;">Previous Reports</h3>
+    <ul>
+        {% for report in reports %}
+            <li style="margin-bottom: 10px;">
+                <strong>{{ report.created_at.strftime('%Y-%m-%d') }}</strong>
+                {% if report.pdf_data %}
+                    - <a class="btn btn-primary" href="{{ url_for('manager.download_report', report_id=report.id) }}">Download PDF</a>
+                {% endif %}
+                {% if report.content %}
+                    <div style="margin-top: 6px;">{{ report.content }}</div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

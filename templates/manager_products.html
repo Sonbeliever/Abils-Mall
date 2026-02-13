@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="products-header">
+        <h2>Manage Products</h2>
+        <a class="btn btn-primary" href="{{ url_for('manager.add_product') }}">Add Product</a>
+    </div>
+    <table class="admin-table">
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Sale Price</th>
+            <th>Stock</th>
+            <th>Action</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+            <td>
+                {% set image_src = product.image_url %}
+                {% if image_src and image_src.startswith('uploads/') %}
+                    {% set image_src = url_for('static', filename=image_src) %}
+                {% endif %}
+                <img class="product-thumb" src="{{ image_src or url_for('static', filename='images/headphones.jpg') }}" alt="{{ product.name }}">
+            </td>
+            <td>{{ product.name }}</td>
+            <td>₦{{ "{:,.0f}".format(product.price) }}</td>
+            <td>
+                {% if product.sale_price %}
+                    ₦{{ "{:,.0f}".format(product.sale_price) }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>{{ product.stock }}</td>
+            <td>
+                <div class="table-actions">
+                    <a class="btn btn-primary" href="{{ url_for('manager.edit_product', product_id=product.id) }}">Edit</a>
+                    <form method="POST" action="{{ url_for('manager.delete_product', product_id=product.id) }}" onsubmit="return confirm('Delete this product?');">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

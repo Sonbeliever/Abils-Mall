@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 style="margin: 30px 0;">Your Cart</h1>
+    <div class="cart-container admin-grid">
+        <div class="cart-items-container admin-panel">
+            {% if cart_items %}
+                {% for item in cart_items %}
+                    <div class="cart-item">
+                        {% set image_src = item.product.image_url %}
+                        {% if image_src and image_src.startswith('uploads/') %}
+                            {% set image_src = url_for('static', filename=image_src) %}
+                        {% endif %}
+                        <img src="{{ image_src or url_for('static', filename='images/headphones.jpg') }}" class="cart-item-img" alt="{{ item.product.name }}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">{{ item.product.name }}</div>
+                            <div class="cart-item-price">₦{{ "{:,.0f}".format(item.product.sale_price or item.product.price) }}</div>
+                            <form method="POST" action="{{ url_for('shop.update_cart', item_id=item.id) }}">
+                                <div class="cart-item-actions">
+                                    <input class="quantity-input" type="number" name="quantity" value="{{ item.quantity }}" min="0">
+                                    <button class="checkout-btn" type="submit">Update</button>
+                                    <a class="btn btn-danger" href="{{ url_for('shop.remove_from_cart', item_id=item.id) }}">Remove</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Your cart is empty.</p>
+            {% endif %}
+        </div>
+        <div class="cart-summary admin-panel">
+            <h3>Summary</h3>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>₦{{ "{:,.0f}".format(subtotal) }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>Calculated at checkout</span>
+            </div>
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span>₦{{ "{:,.0f}".format(total) }}</span>
+            </div>
+            <a class="checkout-btn" href="{{ url_for('shop.checkout') }}">Proceed to Checkout</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

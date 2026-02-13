@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abils Mall</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- ============================== -->
+<!-- Header -->
+<!-- ============================== -->
+<header>
+    <div class="top-bar">
+        <p>🎉 Free shipping on orders over ₦75,000 | New user discount: 10% off</p>
+    </div>
+
+    <nav class="main-nav">
+        <a href="#" class="logo" onclick="showPage('home')">
+            <i class="fas fa-shopping-bag"></i> Abils Mall
+        </a>
+
+        <div class="nav-links">
+            <a href="#" class="active" onclick="showPage('home')">Home</a>
+            <a href="#" onclick="showPage('cart')">Cart</a>
+            <a href="#" onclick="showPage('checkout')">Checkout</a>
+            <a href="#" onclick="showPage('admin')">Admin</a>
+            <a href="#" onclick="showPage('tracking')">Track Order</a>
+        </div>
+
+        <div class="nav-icons">
+            <button class="mode-toggle" id="mode-toggle">
+                <i class="fas fa-moon"></i>
+                <span>Dark Mode</span>
+            </button>
+            <a href="#" class="user-icon" id="auth-btn">
+                <i class="fas fa-user"></i>
+                <span>Account</span>
+            </a>
+            <a href="#" class="wishlist-icon">
+                <i class="fas fa-heart"></i>
+                <span>Wishlist</span>
+                <span class="wishlist-count">0</span>
+            </a>
+            <a href="#" class="cart-icon" onclick="showPage('cart')">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+                <span class="cart-count" id="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<!-- ============================== -->
+<!-- Product Detail Modal -->
+<!-- ============================== -->
+<div class="product-modal" id="product-modal">
+    <div class="product-modal-content" id="product-modal-content">
+        <!-- Content injected by JS -->
+    </div>
+    <button class="product-modal-close" onclick="closeProductModal()">&times;</button>
+</div>
+
+<!-- ============================== -->
+<!-- Main Content -->
+<!-- ============================== -->
+<div class="main-content">
+
+    <!-- ============================== -->
+    <!-- Home Page -->
+    <!-- ============================== -->
+    <div class="page-section active" id="home-page">
+        <section class="hero">
+            <h1>Discover Amazing Products</h1>
+            <p>Shop from thousands of trusted sellers worldwide. Enjoy great deals, fast shipping, and buyer protection.</p>
+            <button onclick="showPage('cart')">Start Shopping Now</button>
+        </section>
+
+        <div class="container">
+
+            <!-- Shipping Calculator -->
+            <div class="tracking-card">
+                <h3>Shipping Calculator (Nigeria)</h3>
+                <div class="tracking-input">
+                    <select id="shipping-state">
+                        <option value="">Select State</option>
+                        <option value="Kaduna">Kaduna State</option>
+                        <option value="Kano">Kano State</option>
+                        <option value="Katsina">Katsina State</option>
+                        <option value="Zamfara">Zamfara State</option>
+                        <option value="Lagos">Lagos State</option>
+                        <option value="Abuja">Abuja FCT</option>
+                    </select>
+                    <input type="text" id="shipping-city" placeholder="City">
+                    <button class="checkout-btn" onclick="calculateShipping()">Calculate</button>
+                </div>
+                <div id="shipping-result" style="display: none; padding: 15px; background-color: var(--secondary-color); border-radius: 4px;">
+                    <p id="shipping-result-text"></p>
+                </div>
+            </div>
+
+            <!-- Categories Section -->
+            <div class="categories-section">
+                <h2>Shop by Category</h2>
+                <div class="categories-grid">
+                    {% for category in ['Electronics', 'Fashion', 'Home', 'Beauty', 'Sports', 'All'] %}
+                    <div class="category-card" onclick="filterByCategory('{{ category }}')">
+                        <i class="fas fa-th-large"></i>
+                        <h4>{{ category }}</h4>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <h2 style="margin: 40px 0 20px; color: var(--text-color);">Featured Products</h2>
+            <div class="products-grid" id="products-container">
+                <!-- Products rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- Cart Page -->
+    <!-- ============================== -->
+    <div class="page-section" id="cart-page">
+        <div class="container">
+            <h1 style="margin-bottom: 30px; color: var(--text-color);">Your Shopping Cart</h1>
+            <div class="cart-container">
+                <div class="cart-items-container" id="cart-items"></div>
+
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="subtotal">₦0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span id="shipping">₦0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (7.5%)</span>
+                        <span id="tax">₦0</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span id="total">₦0</span>
+                    </div>
+                    <button class="checkout-btn" onclick="showPage('checkout')">Proceed to Checkout</button>
+                    <button class="checkout-btn" style="background-color: var(--secondary-color); color: var(--text-color); margin-top: 10px;" onclick="showPage('home')">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- Checkout Page -->
+    <!-- ============================== -->
+    <div class="page-section" id="checkout-page">
+        <div class="container">
+            <h1 style="margin-bottom: 30px; color: var(--text-color);">Checkout</h1>
+
+            <div class="checkout-container">
+                <div class="checkout-form">
+                    <h3 style="margin-bottom: 20px; color: var(--text-color);">Shipping Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" id="first-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="last-name" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>State</label>
+                            <select id="state" required>
+                                <option value="">Select State</option>
+                                <option value="Kaduna">Kaduna State</option>
+                                <option value="Kano">Kano State</option>
+                                <option value="Katsina">Katsina State</option>
+                                <option value="Zamfara">Zamfara State</option>
+                                <option value="Lagos">Lagos State</option>
+                                <option value="Abuja">Abuja FCT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" id="city" required>
+                        </div>
+                    </div>
+
+                    <div class="payment-methods">
+                        <h3 style="margin-bottom: 20px; color: var(--text-color);">Payment Method</h3>
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="card" checked>
+                            <i class="fas fa-credit-card"></i>
+                            <div>
+                                <strong>Credit/Debit Card</strong>
+                                <p style="color: var(--text-light); margin-top: 5px; font-size: 14px;">Pay with your card securely</p>
+                            </div>
+                        </label>
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="transfer">
+                            <i class="fas fa-university"></i>
+                            <div>
+                                <strong>Bank Transfer</strong>
+                                <p style="color: var(--text-light); margin-top: 5px; font-size: 14px;">Transfer directly to our account</p>
+                            </div>
+                        </label>
+                        <label class="payment-method">
+                            <input type="radio" name="payment" value="delivery">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <div>
+                                <strong>Pay on Delivery</strong>
+                                <p style="color: var(--text-light); margin-top: 5px; font-size: 14px;">Pay when you receive your order</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div id="checkout-items"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================== -->
+<!-- JS Scripts -->
+<!-- ============================== -->
+<script src="{{ url_for('static', filename='js/products.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+<script src="{{ url_for('static', filename='js/checkout.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tracking.js') }}"></script>
+
+</body>
+</html>

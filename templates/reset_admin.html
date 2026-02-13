@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Reset Admin Password</h2>
+    <form method="POST" class="checkout-form" style="max-width: 500px;">
+        <input type="hidden" name="token" value="{{ token }}">
+        <div class="form-group">
+            <label>New Password</label>
+            <input type="password" name="password" required>
+        </div>
+        <button class="checkout-btn" type="submit">Reset Password</button>
+    </form>
+</div>
+{% endblock %}

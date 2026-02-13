@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">All Users</h2>
+    <div class="admin-table-wrapper">
+    <table class="admin-table">
+        <tr>
+            <th>ID</th>
+            <th>DP</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Commission</th>
+            <th>Verified</th>
+            <th>Action</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>
+                {% if user.avatar_path %}
+                    <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename=user.avatar_path) }}" alt="{{ user.username }} avatar">
+                {% else %}
+                    <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ user.username }} avatar">
+                {% endif %}
+            </td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+                {% if user.role == 'manager' %}
+                <form method="POST" action="{{ url_for('admin.update_manager_commission', user_id=user.id) }}" style="display:flex; gap:8px; align-items:center;">
+                    <input type="number" name="commission_rate" min="0" max="100" step="0.1" value="{{ user.commission_rate or 0 }}" style="width:90px;">
+                    <button class="btn btn-primary" type="submit">Update</button>
+                </form>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>{{ 'Yes' if user.is_verified else 'No' }}</td>
+            <td>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
+                    {% if not user.is_verified %}
+                        <a class="btn btn-success" href="{{ url_for('admin.verify_user', user_id=user.id) }}">Verify</a>
+                    {% endif %}
+                    <a class="btn btn-primary" href="{{ url_for('admin.reset_user_password', user_id=user.id) }}">Reset Password</a>
+                    <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" onsubmit="return confirm('Delete this user permanently?');">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+{% endblock %}

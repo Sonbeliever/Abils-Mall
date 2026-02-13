@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 style="margin: 30px 0;">Admin Dashboard</h1>
+    <div class="admin-grid">
+        <section class="admin-panel">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Total Sales</h4>
+                    <p>₦{{ "{:,.0f}".format(total_sales) }}</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Payments</h4>
+                    <p>₦{{ "{:,.0f}".format(total_payments) }}</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Company Balance</h4>
+                    <p>₦{{ "{:,.0f}".format(total_company_balance) }}</p>
+                </div>
+            </div>
+
+            <div class="admin-actions">
+                <a class="btn btn-primary" href="{{ url_for('admin.create_company') }}">Create Company</a>
+                <a class="btn btn-primary" href="{{ url_for('admin.create_manager') }}">Create Manager</a>
+                <a class="btn btn-primary" href="{{ url_for('admin.users') }}">View Users</a>
+                <a class="btn btn-primary" href="{{ url_for('admin.orders') }}">View Orders</a>
+                <a class="btn btn-primary" href="{{ url_for('admin.bank_transfers') }}">Bank Transfers</a>
+                <a class="btn btn-primary" href="{{ url_for('admin.activities') }}">Activities</a>
+                <a class="btn btn-primary" href="{{ url_for('admin.analytics') }}">Analytics</a>
+                <a class="btn btn-primary" href="{{ url_for('admin.admin_email_change_page') }}">Change Admin Email</a>
+                <a class="btn btn-primary" href="{{ url_for('admin.daily_statement_pdf') }}">Daily Statement (PDF)</a>
+            </div>
+
+            <h3 style="margin-top: 20px;">Company Balances</h3>
+            <div class="admin-table-wrapper">
+            <table class="admin-table">
+                <tr>
+                    <th>Company</th>
+                    <th>Balance</th>
+                    <th>Withdraw</th>
+                </tr>
+                {% for company in companies %}
+                <tr>
+                    <td>{{ company.name }}</td>
+                    <td>₦{{ "{:,.0f}".format(company.wallet_balance) }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.withdraw_company', company_id=company.id) }}" class="form-wide">
+                            <input type="number" name="amount" min="1" placeholder="Amount" style="width:160px;">
+                            <button class="btn btn-danger" type="submit">Withdraw</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            </div>
+        </section>
+
+        <aside class="admin-panel">
+            <div class="activity-header">
+                <h3>Recent Activities</h3>
+            </div>
+
+            <form id="mark-seen-form" method="POST" action="{{ url_for('admin.mark_activities_seen') }}"></form>
+
+            <div class="activity-panel" id="activity-panel">
+                <form method="GET" style="margin: 12px 0 16px; display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+                    <input type="number" name="company_id" min="1" placeholder="Search by Company ID" value="{{ company_id_filter }}" style="width:200px;">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                    {% if company_id_filter %}
+                        <a class="btn btn-danger" href="{{ url_for('admin.dashboard') }}">Clear</a>
+                    {% endif %}
+                </form>
+                <ul class="admin-activity-list">
+                    {% for activity in activities %}
+                        <li class="admin-activity-item">
+                            <strong>{{ activity.created_at.strftime('%Y-%m-%d') }}</strong><br>
+                            {{ activity.description }}
+                        </li>
+                    {% endfor %}
+                    {% if activities|length == 0 %}
+                        <li class="admin-activity-item">No activities found.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

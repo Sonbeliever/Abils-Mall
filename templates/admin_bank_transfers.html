@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Bank Transfer Approvals</h2>
+    <table class="admin-table">
+        <tr>
+            <th>ID</th>
+            <th>Order</th>
+            <th>Buyer</th>
+            <th>Company</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Proof</th>
+            <th>Actions</th>
+        </tr>
+        {% for t in transfers %}
+        <tr>
+            <td>{{ t.id }}</td>
+            <td>{{ t.order_id }}</td>
+            <td>{{ user_map.get(t.buyer_id, t.buyer_id) }}</td>
+            <td>{{ company_map.get(t.company_id, t.company_id) }}</td>
+            <td>₦{{ "{:,.0f}".format(t.amount) }}</td>
+            <td>{{ t.status }}</td>
+            <td>
+                {% if t.proof_path %}
+                    <a href="/{{ t.proof_path }}">View</a>
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td>
+                {% if t.status == 'pending' %}
+                    <a class="btn btn-success" href="{{ url_for('admin.approve_bank_transfer', transfer_id=t.id) }}">Approve</a>
+                    <a class="btn btn-danger" href="{{ url_for('admin.reject_bank_transfer', transfer_id=t.id) }}">Reject</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

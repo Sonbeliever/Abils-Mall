@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 style="margin: 30px 0;">Admin Email Change</h1>
+
+    <section class="admin-panel admin-email-panel" style="max-width: 720px;">
+        <div class="admin-form-card">
+            <h3>Request OTP</h3>
+            <form method="POST" action="{{ url_for('admin.request_admin_email_change') }}" class="form-wide admin-form-row">
+                <input type="email" name="new_email" placeholder="New admin email" required>
+                <button class="btn btn-primary" type="submit">Send OTP</button>
+            </form>
+        </div>
+
+        <div class="admin-form-card">
+            <h3>Confirm OTP</h3>
+            <form method="POST" action="{{ url_for('admin.confirm_admin_email_change') }}" class="form-wide admin-form-row">
+                <input type="text" name="otp" placeholder="Enter OTP" required>
+                <button class="btn btn-success" type="submit">Confirm Email</button>
+            </form>
+        </div>
+
+        <p style="font-size: 12px; margin-top: 6px;">
+            OTP is sent to your current admin email: {{ current_user.email }}
+        </p>
+    </section>
+</div>
+{% endblock %}

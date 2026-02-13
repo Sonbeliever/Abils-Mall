@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">All Orders</h2>
+    <table class="admin-table">
+        <tr>
+            <th>ID</th>
+            <th>Buyer</th>
+            <th>Company</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Date</th>
+            <th>OPay Actions</th>
+        </tr>
+        {% for order in orders %}
+        {% set payment = payments.get(order.id) %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.buyer.username if order.buyer else 'N/A' }}</td>
+            <td>{{ company_map.get(order.company_id, order.company_id) }}</td>
+            <td>₦{{ "{:,.0f}".format(order.total_amount) }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ payment.provider if payment else '-' }}</td>
+            <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+                {% if payment and payment.provider == 'opay' %}
+                    <a class="btn btn-primary" href="{{ url_for('admin.admin_opay_status', order_id=order.id) }}">Check Status</a>
+                    <form method="POST" action="{{ url_for('admin.admin_opay_refund', order_id=order.id) }}" style="display:inline-block;">
+                        <input type="number" name="amount" value="{{ order.total_amount|int }}" style="width:110px;">
+                        <button class="btn btn-danger" type="submit">Refund</button>
+                    </form>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

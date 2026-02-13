@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Daily Reports</h2>
+    <form method="POST" action="{{ url_for('admin.delete_old_reports') }}" style="margin-bottom: 20px;" onsubmit="return confirm('Delete all reports before today?');">
+        <button class="btn btn-danger" type="submit">Delete Reports Before Today</button>
+    </form>
+    <ul>
+        {% for report in reports %}
+            <li style="margin-bottom: 15px;">
+                <strong>{{ report.created_at.strftime('%Y-%m-%d') }}</strong> -
+                Company {{ company_map.get(report.company_id, report.company_id) }} | Manager {{ user_map.get(report.manager_id, report.manager_id) }}
+                {% if report.pdf_data %}
+                    <div style="margin-top: 8px;">
+                        <a class="btn btn-primary" href="{{ url_for('admin.download_report', report_id=report.id) }}">Download PDF</a>
+                        <form method="POST" action="{{ url_for('admin.delete_report', report_id=report.id) }}" style="display:inline;" onsubmit="return confirm('Delete this report?');">
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}
+                {% if report.content %}
+                    <div style="margin-top: 5px;">{{ report.content }}</div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

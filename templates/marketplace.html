@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="hero-glass glow-card admin-panel">
+        <div class="ambient-orb"></div>
+        <h1>Welcome to <span class="brand-pulse">Abils</span> Mall</h1>
+        <p>Discover premium products, secure payments, and fast delivery — crafted for your comfort.</p>
+    </div>
+    <div class="admin-panel">
+        <div class="products-grid">
+            {% for product in products %}
+                <div class="product-card">
+                {% if product.is_new %}
+                    <div class="product-badge new">New</div>
+                {% elif product.is_hot %}
+                    <div class="product-badge hot">Hot</div>
+                {% endif %}
+                {% set image_src = product.image_url %}
+                {% if image_src and image_src.startswith('uploads/') %}
+                    {% set image_src = url_for('static', filename=image_src) %}
+                {% endif %}
+                <img src="{{ image_src or url_for('static', filename='images/headphones.jpg') }}" class="product-img" alt="{{ product.name }}">
+                <div class="product-info">
+                    <div class="product-title">{{ product.name }}</div>
+                    <div class="product-price">
+                        <span class="current-price">₦{{ "{:,.0f}".format(product.sale_price or product.price) }}</span>
+                        {% if product.sale_price %}
+                            <span class="original-price">₦{{ "{:,.0f}".format(product.price) }}</span>
+                        {% endif %}
+                    </div>
+                    <p style="color: var(--text-light);">{{ product.description or '' }}</p>
+                    {% if current_user.is_authenticated and current_user.role == 'buyer' %}
+                        <form method="POST" action="{{ url_for('shop.add_to_cart', product_id=product.id) }}">
+                            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="quantity-input">
+                            <button class="btn-add-cart" type="submit">Add to Cart</button>
+                        </form>
+                        <a class="btn-view-details" style="display:inline-block; margin-top:10px;" href="{{ url_for('shop.request_discount', company_id=product.company_id) }}">Request Discount</a>
+                    {% else %}
+                        <p style="margin-top:10px;">Login as buyer to purchase.</p>
+                    {% endif %}
+                </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

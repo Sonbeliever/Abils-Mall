@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">OPay Wallet Payment</h2>
+    <p>Order #{{ order.id }} | Amount: ₦{{ "{:,.0f}".format(order.total_amount) }}</p>
+    {% if qr_code %}
+        <div class="checkout-form" style="max-width: 420px; text-align:center;">
+            <p>Scan this QR code with your OPay app:</p>
+            <img src="{{ qr_code }}" alt="OPay QR" style="width: 280px; height: 280px; object-fit: contain;">
+        </div>
+    {% else %}
+        <p>QR code not available. Please try again.</p>
+    {% endif %}
+</div>
+{% endblock %}

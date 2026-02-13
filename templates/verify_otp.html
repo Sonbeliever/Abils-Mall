@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Verify Your Account</h2>
+    <form method="POST" class="checkout-form" style="max-width: 480px;">
+        <div class="form-group">
+            <label>Enter OTP</label>
+            <input type="text" name="otp" placeholder="6-digit code" required>
+            <small style="display:block; margin-top:6px; color: var(--text-light);">Check your email and SMS for the code.</small>
+        </div>
+        <button class="checkout-btn" type="submit">Verify</button>
+    </form>
+    <form method="POST" action="{{ url_for('auth.resend_otp', user_id=user.id) }}" style="margin-top: 12px;">
+        <button class="btn btn-primary" type="submit">Resend OTP</button>
+    </form>
+</div>
+{% endblock %}

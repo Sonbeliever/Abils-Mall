@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Payout Requests</h2>
+    <table class="admin-table">
+        <tr>
+            <th>ID</th>
+            <th>Company</th>
+            <th>Manager</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for payout in payouts %}
+        <tr>
+            <td>{{ payout.id }}</td>
+            <td>{{ company_map.get(payout.company_id, payout.company_id) }}</td>
+            <td>{{ user_map.get(payout.manager_id, payout.manager_id) }}</td>
+            <td>₦{{ "{:,.0f}".format(payout.amount) }}</td>
+            <td>{{ payout.status }}</td>
+            <td>
+                {% if payout.status == 'pending' %}
+                    <a class="btn btn-success" href="{{ url_for('admin.approve_payout', payout_id=payout.id) }}">Approve</a>
+                    <a class="btn btn-danger" href="{{ url_for('admin.reject_payout', payout_id=payout.id) }}">Reject</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

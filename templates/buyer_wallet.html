@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Wallet</h2>
+    <p>Balance: <strong>₦{{ "{:,.0f}".format(current_user.wallet_balance) }}</strong></p>
+
+    <form method="POST" class="checkout-form" style="max-width: 400px;">
+        <div class="form-group">
+            <label>Top Up Amount</label>
+            <input type="number" name="amount" min="1" required>
+        </div>
+        <button class="checkout-btn" type="submit">Add Funds</button>
+    </form>
+
+    <h3 style="margin-top: 30px;">Transactions</h3>
+    <ul>
+        {% for tx in transactions %}
+            <li>{{ tx.created_at.strftime('%Y-%m-%d') }} - {{ tx.tx_type }} - ₦{{ "{:,.0f}".format(tx.amount) }} ({{ tx.description }})</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

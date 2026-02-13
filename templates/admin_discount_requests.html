@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Discount Requests</h2>
+    <table class="admin-table">
+        <tr>
+            <th>ID</th>
+            <th>Buyer</th>
+            <th>Company</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+        {% for req in requests %}
+        <tr>
+            <td>{{ req.id }}</td>
+            <td>{{ user_map.get(req.buyer_id, req.buyer_id) }}</td>
+            <td>{{ company_map.get(req.company_id, req.company_id) }}</td>
+            <td>{{ req.status }}</td>
+            <td>{{ req.created_at.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

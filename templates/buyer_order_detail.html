@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Order #{{ order.id }}</h2>
+    <p>Status: <strong>{{ order.status }}</strong></p>
+    <p>Total: ₦{{ "{:,.0f}".format(order.total_amount) }}</p>
+    {% if order.shipping_fee is not none %}
+    <p>Shipping: ₦{{ "{:,.0f}".format(order.shipping_fee) }}</p>
+    {% endif %}
+    {% if order.delivery_distance_km %}
+    <p>Distance: {{ "%.1f"|format(order.delivery_distance_km) }} km</p>
+    {% endif %}
+    {% if order.delivery_address %}
+    <p>Delivery Address: {{ order.delivery_address }}</p>
+    {% endif %}
+    {% if order.delivery_phone %}
+    <p>Delivery Phone: {{ order.delivery_phone }}</p>
+    {% endif %}
+    {% if order.delivery_area or order.delivery_bus_stop %}
+    <p>Area / Bus Stop: {{ order.delivery_area or '-' }} / {{ order.delivery_bus_stop or '-' }}</p>
+    {% endif %}
+    {% if order.delivery_state or order.delivery_country %}
+    <p>State / Country: {{ order.delivery_state or '-' }} / {{ order.delivery_country or '-' }}</p>
+    {% endif %}
+    {% if order.delivery_map_url %}
+    <p>Map: <a href="{{ order.delivery_map_url }}" target="_blank" rel="noopener">Open location</a></p>
+    {% endif %}
+    <h3 style="margin-top: 20px;">Items</h3>
+    <ul>
+        {% for item in order.items %}
+            <li>{{ item.quantity }} x {{ item.product.name }} @ ₦{{ "{:,.0f}".format(item.price) }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
