@@ -5,6 +5,14 @@ from email.mime.multipart import MIMEMultipart
 import requests
 
 
+def _resend_config():
+    return {
+        "api_key": os.getenv("RESEND_API_KEY", ""),
+        "from_email": os.getenv("RESEND_FROM_EMAIL", ""),
+        "timeout": float(os.getenv("RESEND_TIMEOUT", "10")),
+    }
+
+
 def _smtp_config():
     return {
         "host": os.getenv("SMTP_HOST", ""),
@@ -19,6 +27,31 @@ def _smtp_config():
 def send_email(to_email, subject, body, enabled=True):
     if not enabled:
         return False
+
+    resend_cfg = _resend_config()
+    if resend_cfg["api_key"] and resend_cfg["from_email"] and to_email:
+        try:
+            res = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {resend_cfg['api_key']}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "from": resend_cfg["from_email"],
+                    "to": [to_email],
+                    "subject": subject,
+                    "text": body,
+                },
+                timeout=resend_cfg["timeout"],
+            )
+            if os.getenv("NOTIFY_DEBUG") == "1":
+                print(f"Resend response {res.status_code}: {res.text[:200]}")
+            return 200 <= res.status_code < 300
+        except Exception as exc:
+            if os.getenv("NOTIFY_DEBUG") == "1":
+                print(f"Resend send failed: {exc}")
+            return False
 
     cfg = _smtp_config()
     if not cfg["host"] or not cfg["user"] or not cfg["password"] or not to_email:
