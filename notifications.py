@@ -66,10 +66,16 @@ def send_email(to_email, subject, body, enabled=True):
     msg.attach(MIMEText(body, "plain"))
 
     try:
-        with smtplib.SMTP(cfg["host"], cfg["port"], timeout=cfg["timeout"]) as server:
-            server.starttls()
-            server.login(cfg["user"], cfg["password"])
-            server.sendmail(cfg["from_email"], to_email, msg.as_string())
+        # Port 465 expects implicit TLS, while 587 uses STARTTLS.
+        if cfg["port"] == 465:
+            with smtplib.SMTP_SSL(cfg["host"], cfg["port"], timeout=cfg["timeout"]) as server:
+                server.login(cfg["user"], cfg["password"])
+                server.sendmail(cfg["from_email"], to_email, msg.as_string())
+        else:
+            with smtplib.SMTP(cfg["host"], cfg["port"], timeout=cfg["timeout"]) as server:
+                server.starttls()
+                server.login(cfg["user"], cfg["password"])
+                server.sendmail(cfg["from_email"], to_email, msg.as_string())
         if os.getenv("NOTIFY_DEBUG") == "1":
             print(f"Email sent to {to_email}")
         return True
