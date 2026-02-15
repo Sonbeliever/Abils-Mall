@@ -12,6 +12,14 @@ def _resend_config():
         "timeout": float(os.getenv("RESEND_TIMEOUT", "10")),
     }
 
+def _brevo_config():
+    return {
+        "api_key": os.getenv("BREVO_API_KEY", ""),
+        "from_email": os.getenv("BREVO_FROM_EMAIL", ""),
+        "from_name": os.getenv("BREVO_FROM_NAME", ""),
+        "timeout": float(os.getenv("BREVO_TIMEOUT", "10")),
+    }
+
 
 def _smtp_config():
     return {
@@ -27,6 +35,35 @@ def _smtp_config():
 def send_email(to_email, subject, body, enabled=True):
     if not enabled:
         return False
+
+    brevo_cfg = _brevo_config()
+    if brevo_cfg["api_key"] and brevo_cfg["from_email"] and to_email:
+        try:
+            sender = {"email": brevo_cfg["from_email"]}
+            if brevo_cfg["from_name"]:
+                sender["name"] = brevo_cfg["from_name"]
+            res = requests.post(
+                "https://api.brevo.com/v3/smtp/email",
+                headers={
+                    "accept": "application/json",
+                    "api-key": brevo_cfg["api_key"],
+                    "content-type": "application/json",
+                },
+                json={
+                    "sender": sender,
+                    "to": [{"email": to_email}],
+                    "subject": subject,
+                    "textContent": body,
+                },
+                timeout=brevo_cfg["timeout"],
+            )
+            if os.getenv("NOTIFY_DEBUG") == "1":
+                print(f"Brevo response {res.status_code}: {res.text[:200]}")
+            return 200 <= res.status_code < 300
+        except Exception as exc:
+            if os.getenv("NOTIFY_DEBUG") == "1":
+                print(f"Brevo send failed: {exc}")
+            return False
 
     resend_cfg = _resend_config()
     if resend_cfg["api_key"] and resend_cfg["from_email"] and to_email:
