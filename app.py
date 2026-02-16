@@ -4,12 +4,58 @@ from flask_login import current_user
 from datetime import timedelta
 import os
 from dotenv import load_dotenv
+from sqlalchemy import inspect, text
 
 from auth import auth_bp
 from admin import admin_bp
 from manager import manager_bp
 from shop import shop_bp
 from payments import payments_bp
+
+
+def _ensure_schema_columns():
+    """Best-effort lightweight migration for environments without Alembic."""
+    engine = db.engine
+    inspector = inspect(engine)
+    tables = set(inspector.get_table_names())
+
+    alter_map = {
+        "product": [
+            ("weight_grams", "ALTER TABLE product ADD COLUMN weight_grams INTEGER DEFAULT 0"),
+            ("size_desc", "ALTER TABLE product ADD COLUMN size_desc VARCHAR(120)"),
+        ],
+        "order": [
+            ("delivery_country", 'ALTER TABLE "order" ADD COLUMN delivery_country VARCHAR(120)'),
+            ("delivery_state", 'ALTER TABLE "order" ADD COLUMN delivery_state VARCHAR(120)'),
+            ("delivery_area", 'ALTER TABLE "order" ADD COLUMN delivery_area VARCHAR(120)'),
+            ("delivery_bus_stop", 'ALTER TABLE "order" ADD COLUMN delivery_bus_stop VARCHAR(120)'),
+            ("delivery_address", 'ALTER TABLE "order" ADD COLUMN delivery_address VARCHAR(255)'),
+            ("delivery_phone", 'ALTER TABLE "order" ADD COLUMN delivery_phone VARCHAR(30)'),
+            ("delivery_map_url", 'ALTER TABLE "order" ADD COLUMN delivery_map_url VARCHAR(500)'),
+            ("delivery_distance_km", 'ALTER TABLE "order" ADD COLUMN delivery_distance_km DOUBLE PRECISION'),
+            ("shipping_fee", 'ALTER TABLE "order" ADD COLUMN shipping_fee DOUBLE PRECISION DEFAULT 0.0'),
+            ("total_weight_grams", 'ALTER TABLE "order" ADD COLUMN total_weight_grams INTEGER DEFAULT 0'),
+        ],
+        "company": [
+            ("pickup_country", "ALTER TABLE company ADD COLUMN pickup_country VARCHAR(120)"),
+            ("pickup_state", "ALTER TABLE company ADD COLUMN pickup_state VARCHAR(120)"),
+            ("pickup_area", "ALTER TABLE company ADD COLUMN pickup_area VARCHAR(120)"),
+            ("pickup_bus_stop", "ALTER TABLE company ADD COLUMN pickup_bus_stop VARCHAR(120)"),
+            ("pickup_address", "ALTER TABLE company ADD COLUMN pickup_address VARCHAR(255)"),
+            ("pickup_map_url", "ALTER TABLE company ADD COLUMN pickup_map_url VARCHAR(500)"),
+            ("pickup_lat", "ALTER TABLE company ADD COLUMN pickup_lat DOUBLE PRECISION"),
+            ("pickup_lng", "ALTER TABLE company ADD COLUMN pickup_lng DOUBLE PRECISION"),
+        ],
+    }
+
+    with engine.begin() as conn:
+        for table_name, patches in alter_map.items():
+            if table_name not in tables:
+                continue
+            existing_cols = {col["name"] for col in inspector.get_columns(table_name)}
+            for col_name, alter_sql in patches:
+                if col_name not in existing_cols:
+                    conn.execute(text(alter_sql))
 
 
 def create_app():
@@ -52,6 +98,10 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+        _ensure_schema_columns()
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
