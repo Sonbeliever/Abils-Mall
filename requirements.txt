@@ -2,6 +2,7 @@ Flask==2.3.0
 Flask-SQLAlchemy==3.0.0
 Flask-Login==0.6.2
 Werkzeug==2.3.0
+SQLAlchemy==1.4.52
 requests==2.31.0
 reportlab==4.0.4
 Pillow==11.0.0
