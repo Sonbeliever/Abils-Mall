@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h1 style="margin: 30px 0;">Admin Dashboard</h1>
+<div class="container admin-dashboard">
+    <div class="dashboard-head">
+        <h1>Admin Dashboard</h1>
+    </div>
     <div class="admin-grid">
         <section class="admin-panel">
             <div class="stats-grid">
@@ -31,7 +33,7 @@
                 <a class="btn btn-primary" href="{{ url_for('admin.daily_statement_pdf') }}">Daily Statement (PDF)</a>
             </div>
 
-            <h3 style="margin-top: 20px;">Company Balances</h3>
+            <h3 class="section-title">Company Balances</h3>
             <div class="admin-table-wrapper">
             <table class="admin-table">
                 <tr>
@@ -44,8 +46,8 @@
                     <td>{{ company.name }}</td>
                     <td>₦{{ "{:,.0f}".format(company.wallet_balance) }}</td>
                     <td>
-                        <form method="POST" action="{{ url_for('admin.withdraw_company', company_id=company.id) }}" class="form-wide">
-                            <input type="number" name="amount" min="1" placeholder="Amount" style="width:160px;">
+                        <form method="POST" action="{{ url_for('admin.withdraw_company', company_id=company.id) }}" class="table-inline-form">
+                            <input type="number" name="amount" min="1" placeholder="Amount" class="compact-input">
                             <button class="btn btn-danger" type="submit">Withdraw</button>
                         </form>
                     </td>
@@ -63,8 +65,8 @@
             <form id="mark-seen-form" method="POST" action="{{ url_for('admin.mark_activities_seen') }}"></form>
 
             <div class="activity-panel" id="activity-panel">
-                <form method="GET" style="margin: 12px 0 16px; display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
-                    <input type="number" name="company_id" min="1" placeholder="Search by Company ID" value="{{ company_id_filter }}" style="width:200px;">
+                <form method="GET" class="activity-search-form">
+                    <input type="number" name="company_id" min="1" placeholder="Search by Company ID" value="{{ company_id_filter }}" class="compact-input">
                     <button class="btn btn-primary" type="submit">Search</button>
                     {% if company_id_filter %}
                         <a class="btn btn-danger" href="{{ url_for('admin.dashboard') }}">Clear</a>

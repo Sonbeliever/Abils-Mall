@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h1 style="margin: 30px 0;">Checkout</h1>
+<div class="container page-shell">
+    <h1 class="page-head">Checkout</h1>
     <div class="checkout-container">
         <div class="checkout-form">
             <h3>Delivery Information</h3>
@@ -35,13 +35,13 @@
                 <div class="form-group">
                     <label>Home Address</label>
                     <textarea name="address" id="address" required></textarea>
-                    <small style="display:block; margin-top:6px; color: var(--text-light);">We will try to locate this address on the map.</small>
+                    <small class="auth-note">We will try to locate this address on the map.</small>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Distance (km)</label>
                         <input type="number" name="distance_km" id="distance_km" min="0" step="0.1" value="0" required readonly>
-                        <small style="display:block; margin-top:6px; color: var(--text-light);">Auto-calculated from map. If location fails, you can edit.</small>
+                        <small class="auth-note">Auto-calculated from map. If location fails, you can edit.</small>
                     </div>
                     <div class="form-group">
                         <label>Map Link (optional)</label>
@@ -50,8 +50,8 @@
                 </div>
                 <div class="form-group">
                     <label>Pick Location on Map</label>
-                    <div id="delivery-map" style="height: 320px; border-radius: 14px; border: 1px solid var(--border-color);"></div>
-                    <small style="display:block; margin-top:6px; color: var(--text-light);">Click the map to set your delivery point or allow location access.</small>
+                    <div id="delivery-map" class="pickup-map"></div>
+                    <small class="panel-help-text">Click the map to set your delivery point or allow location access.</small>
                 </div>
                 <button class="checkout-btn" type="submit">Place Order</button>
             </form>

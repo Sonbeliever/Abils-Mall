@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h2 style="margin: 30px 0;">Bank Transfer</h2>
+<div class="container page-shell">
+    <h2 class="page-head">Bank Transfer</h2>
     <p>Order #{{ order.id }} | Amount: ₦{{ "{:,.0f}".format(order.total_amount) }}</p>
-    <div class="checkout-form" style="max-width: 600px;">
+    <div class="checkout-form form-card-md">
         <h4>Transfer To:</h4>
         <p><strong>Bank:</strong> {{ bank_info.bank }}</p>
         <p><strong>Account Name:</strong> {{ bank_info.account_name }}</p>
         <p><strong>Account Number:</strong> {{ bank_info.account_number }}</p>
     </div>
 
-    <form method="POST" enctype="multipart/form-data" class="checkout-form" style="max-width: 600px; margin-top: 20px;">
+    <form method="POST" enctype="multipart/form-data" class="checkout-form form-card-md section-block">
         <div class="form-group">
             <label>Upload Payment Proof (optional)</label>
             <input type="file" name="proof" accept="image/*">

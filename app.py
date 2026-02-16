@@ -15,8 +15,13 @@ from payments import payments_bp
 def create_app():
     load_dotenv()
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'CHANGE_THIS_SECRET_KEY'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///abils_mall.db'
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'CHANGE_THIS_SECRET_KEY')
+
+    db_url = os.getenv('DATABASE_URL', '')
+    if db_url.startswith('postgres://'):
+        db_url = db_url.replace('postgres://', 'postgresql://', 1)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url or 'sqlite:///abils_mall.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=7)
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0

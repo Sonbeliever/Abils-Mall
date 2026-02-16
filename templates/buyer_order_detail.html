@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h2 style="margin: 30px 0;">Order #{{ order.id }}</h2>
+<div class="container page-shell">
+    <h2 class="page-head">Order #{{ order.id }}</h2>
+    <div class="admin-panel form-card-lg">
     <p>Status: <strong>{{ order.status }}</strong></p>
     <p>Total: ₦{{ "{:,.0f}".format(order.total_amount) }}</p>
     {% if order.shipping_fee is not none %}
@@ -25,11 +26,12 @@
     {% if order.delivery_map_url %}
     <p>Map: <a href="{{ order.delivery_map_url }}" target="_blank" rel="noopener">Open location</a></p>
     {% endif %}
-    <h3 style="margin-top: 20px;">Items</h3>
-    <ul>
+    <h3 class="section-title">Items</h3>
+    <ul class="stack-list">
         {% for item in order.items %}
-            <li>{{ item.quantity }} x {{ item.product.name }} @ ₦{{ "{:,.0f}".format(item.price) }}</li>
+            <li class="stack-list-item">{{ item.quantity }} x {{ item.product.name }} @ ₦{{ "{:,.0f}".format(item.price) }}</li>
         {% endfor %}
     </ul>
+    </div>
 </div>
 {% endblock %}

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h2 style="margin: 30px 0;">Edit Product</h2>
-    <form method="POST" class="checkout-form" style="max-width: 700px;" enctype="multipart/form-data">
+<div class="container page-shell">
+    <h2 class="page-head">Edit Product</h2>
+    <form method="POST" class="checkout-form form-card-lg" enctype="multipart/form-data">
         <div class="form-group">
             <label>Name</label>
             <input type="text" name="name" value="{{ product.name }}" required>
@@ -29,7 +29,7 @@
             <div class="form-group">
                 <label>Image URL</label>
                 <input type="text" name="image_url" value="{{ product.image_url or '' }}">
-                <small style="display:block; margin-top:6px; color: var(--text-light);">Leave blank to keep current image, or upload a new file.</small>
+                <small class="auth-note">Leave blank to keep current image, or upload a new file.</small>
             </div>
         </div>
         <div class="form-row">

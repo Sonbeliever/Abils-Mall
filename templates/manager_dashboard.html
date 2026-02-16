@@ -36,7 +36,7 @@
             <h3>Pickup Location</h3>
             <span class="panel-hint">Set your company pickup point for distance calculations.</span>
         </div>
-        <form method="POST" action="{{ url_for('manager.update_pickup_location') }}" class="checkout-form" style="max-width: 100%;">
+        <form method="POST" action="{{ url_for('manager.update_pickup_location') }}" class="checkout-form full-form">
             <div class="form-row">
                 <div class="form-group">
                     <label>Country</label>
@@ -77,8 +77,8 @@
             </div>
             <div class="form-group">
                 <label>Select Pickup on Map</label>
-                <div id="pickup-map" style="height: 320px; border-radius: 14px; border: 1px solid var(--border-color);"></div>
-                <small style="display:block; margin-top:6px; color: var(--text-light);">Click map to set pickup location or allow location access.</small>
+                <div id="pickup-map" class="pickup-map"></div>
+                <small class="panel-help-text">Click map to set pickup location or allow location access.</small>
             </div>
             <button class="checkout-btn" type="submit">Save Pickup Location</button>
         </form>
@@ -99,8 +99,8 @@
             <tr>
                 <td>{{ buyer_map.get(req.buyer_id, req.buyer_id) }}</td>
                 <td>
-                    <form method="POST" action="{{ url_for('manager.approve_discount', request_id=req.id) }}" style="display:inline-block;">
-                        <input type="number" name="discount_rate" value="10" min="0" max="90" style="width:80px;">
+                    <form method="POST" action="{{ url_for('manager.approve_discount', request_id=req.id) }}" class="table-inline-form">
+                        <input type="number" name="discount_rate" value="10" min="0" max="90" class="rate-input">
                         <button class="btn btn-success" type="submit">Approve</button>
                     </form>
                     <a class="btn btn-danger" href="{{ url_for('manager.reject_discount', request_id=req.id) }}">Reject</a>
@@ -118,7 +118,7 @@
                 <h3>Request Payout</h3>
                 <span class="panel-hint">Withdraw funds to your preferred account.</span>
             </div>
-            <form method="POST" action="{{ url_for('manager.request_payout') }}" class="checkout-form" style="max-width: 100%;">
+            <form method="POST" action="{{ url_for('manager.request_payout') }}" class="checkout-form full-form">
                 <div class="form-group">
                     <label>Amount</label>
                     <input type="number" name="amount" min="1" required>
@@ -132,7 +132,7 @@
                 <h3>OPay Status</h3>
                 <span class="panel-hint">Check payment status for an order.</span>
             </div>
-            <form method="POST" action="{{ url_for('manager.manager_opay_status') }}" class="checkout-form" style="max-width: 100%;">
+            <form method="POST" action="{{ url_for('manager.manager_opay_status') }}" class="checkout-form full-form">
                 <div class="form-group">
                     <label>Order ID</label>
                     <input type="number" name="order_id" required>

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h2 style="margin: 30px 0;">Profile & Notifications</h2>
+<div class="container page-shell">
+    <h2 class="page-head">Profile & Notifications</h2>
     <div class="profile-header">
         {% if current_user.avatar_path %}
             <img class="user-avatar user-avatar-lg" src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.username }} avatar">
@@ -13,11 +13,11 @@
             <p>{{ current_user.email }}</p>
         </div>
     </div>
-    <form method="POST" class="checkout-form" style="max-width: 600px;" enctype="multipart/form-data">
+    <form method="POST" class="checkout-form form-card-md" enctype="multipart/form-data">
         <div class="form-group">
             <label>Display Picture (DP)</label>
             <input type="file" name="avatar" accept="image/*">
-            <small style="display:block; margin-top:6px; color: var(--text-light);">Square crop applied automatically. Max 2MB.</small>
+            <small class="auth-note">Square crop applied automatically. Max 2MB.</small>
         </div>
         {% if current_user.avatar_path %}
         <div class="form-group">
@@ -34,7 +34,7 @@
         </div>
         <div class="form-group">
             <label>Notification Preferences</label>
-            <div style="display:flex; gap:20px; align-items:center;">
+            <div class="inline-checks">
                 <label><input type="checkbox" name="notify_email" {% if current_user.notify_email %}checked{% endif %}> Email</label>
                 <label><input type="checkbox" name="notify_sms" {% if current_user.notify_sms %}checked{% endif %}> SMS</label>
             </div>

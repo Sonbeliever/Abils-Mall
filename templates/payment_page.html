@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h1 style="margin: 30px 0;">Payment</h1>
+<div class="container page-shell">
+    <h1 class="page-head">Payment</h1>
     <p>Order #{{ order.id }} | Total: ₦{{ "{:,.0f}".format(order.total_amount) }}</p>
-    <form method="POST" class="checkout-form" style="max-width: 600px;">
+    <form method="POST" class="checkout-form form-card-md">
         <div class="form-group">
             <label>Available Payment Methods</label>
             <div class="method-grid">
@@ -27,7 +27,7 @@
         <button class="checkout-btn" type="submit">Pay Now</button>
     </form>
 
-    <div class="admin-panel bank-panel" style="margin-top: 24px;">
+    <div class="admin-panel bank-panel section-block">
         <div class="panel-header">
             <h3>Available Banks</h3>
             <span class="panel-hint">Select your bank for transfer.</span>
