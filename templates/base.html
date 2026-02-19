@@ -18,6 +18,9 @@
             </button>
             <a href="{{ url_for('home') }}" class="logo">Abils Mall</a>
             <div class="nav-icons">
+                <button class="mode-toggle mode-icon" id="mode-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+                    <i id="mode-icon" class="fas fa-moon" aria-hidden="true"></i>
+                </button>
                 {% if current_user.is_authenticated %}
                     {% if current_user.role in ['admin', 'manager', 'buyer'] %}
                         {% if current_user.role == 'admin' %}
@@ -35,7 +38,7 @@
                         </button>
                     {% endif %}
                 {% else %}
-                    
+                    <a href="{{ url_for('auth.login') }}" class="user-icon nav-login-link">Login</a>
                 {% endif %}
             </div>
         </nav>
@@ -62,7 +65,6 @@
                     <a href="{{ url_for('about') }}"><i class="fas fa-circle-info"></i> About</a>
                     <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact Us</a>
                 </details>
-                <button class="mode-toggle" id="mode-toggle" type="button">Dark Mode</button>
                 {% if current_user.is_authenticated %}
                     <div class="sidebar-user">
                         <a href="{{ url_for('auth.profile') }}" class="user-chip">
@@ -130,12 +132,21 @@
 
     <script>
         const toggle = document.getElementById('mode-toggle');
+        const modeIcon = document.getElementById('mode-icon');
+        const setThemeIcon = () => {
+            if (!modeIcon) return;
+            const isDark = document.body.classList.contains('dark-mode');
+            modeIcon.classList.toggle('fa-moon', !isDark);
+            modeIcon.classList.toggle('fa-sun', isDark);
+        };
         if (toggle) {
             const saved = localStorage.getItem('theme');
             if (saved === 'dark') document.body.classList.add('dark-mode');
+            setThemeIcon();
             toggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
                 localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+                setThemeIcon();
             });
         }
         const sidebarToggle = document.getElementById('sidebar-toggle');
