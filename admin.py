@@ -686,14 +686,21 @@ def activities():
         flash('Access denied', 'danger')
         return redirect(url_for('auth.login'))
     filter_type = request.args.get('type', 'all')
-    query = ActivityLog.query
+    query = ActivityLog.query.join(User, ActivityLog.actor_id == User.id).filter(User.role == 'manager')
     if filter_type == 'money':
         query = query.filter(ActivityLog.action.like('%PAY%') | ActivityLog.action.like('%TRANSFER%') | ActivityLog.action.like('%WITHDRAW%'))
     elif filter_type == 'auth':
         query = query.filter(ActivityLog.action.like('%LOGIN%') | ActivityLog.action.like('%PASSWORD%'))
     logs = query.order_by(ActivityLog.created_at.desc()).limit(200).all()
     company_map = {c.id: c.name for c in Company.query.all()}
-    return render_template('admin_activities.html', logs=logs, filter_type=filter_type, company_map=company_map)
+    user_map = {u.id: u.username for u in User.query.filter_by(role='manager').all()}
+    return render_template(
+        'admin_activities.html',
+        logs=logs,
+        filter_type=filter_type,
+        company_map=company_map,
+        user_map=user_map
+    )
 
 
 @admin_bp.route('/analytics')

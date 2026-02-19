@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <h2 style="margin: 30px 0;">Activity Logs</h2>
+    <h2 style="margin: 30px 0;">Manager Activity Logs</h2>
     <div style="margin-bottom: 15px;">
         <a class="btn btn-primary" href="{{ url_for('admin.activities', type='all') }}">All</a>
         <a class="btn btn-primary" href="{{ url_for('admin.activities', type='money') }}">Money</a>
@@ -27,7 +27,7 @@
                     -
                 {% endif %}
             </td>
-            <td>{{ log.actor_id or '-' }}</td>
+            <td>{{ user_map.get(log.actor_id, log.actor_id or '-') }}</td>
         </tr>
         {% endfor %}
     </table>

@@ -32,7 +32,7 @@
                 {% if current_user.is_authenticated %}
                     {% if current_user.role in ['admin', 'manager', 'buyer'] %}
                         {% if current_user.role == 'admin' %}
-                            {% set activity_target = url_for('admin.dashboard') %}
+                            {% set activity_target = url_for('admin.activities') %}
                         {% elif current_user.role == 'manager' %}
                             {% set activity_target = url_for('manager.activities') %}
                         {% else %}
