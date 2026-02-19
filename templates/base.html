@@ -13,6 +13,11 @@
             <p>Free shipping on orders over ₦75,000 | New user discount: 10% off</p>
         </div>
         <nav class="main-nav">
+            {% if current_user.is_authenticated %}
+            <button class="sidebar-toggle sidebar-toggle-nav" id="sidebar-toggle" aria-label="Toggle sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            {% endif %}
             <a href="{{ url_for('home') }}" class="logo">Abils Mall</a>
             <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
@@ -20,18 +25,18 @@
             <div class="nav-links">
                 <a href="{{ url_for('home') }}">Home</a>
                 {% if current_user.is_authenticated and current_user.role == 'buyer' %}
-                    <a href="{{ url_for('shop.products') }}">Shop</a>
-                    <a href="{{ url_for('shop.cart') }}">Cart</a>
-                    <a href="{{ url_for('shop.orders') }}">Orders</a>
-                    <a href="{{ url_for('shop.wallet') }}">Wallet</a>
+                    <a class="portal-link" href="{{ url_for('shop.products') }}">Shop</a>
+                    <a class="portal-link" href="{{ url_for('shop.cart') }}">Cart</a>
+                    <a class="portal-link" href="{{ url_for('shop.orders') }}">Orders</a>
+                    <a class="portal-link" href="{{ url_for('shop.wallet') }}">Wallet</a>
                 {% endif %}
                 {% if current_user.is_authenticated and current_user.role == 'manager' %}
-                    <a href="{{ url_for('manager.dashboard') }}">Manager</a>
-                    <a href="{{ url_for('manager.reports') }}">Reports</a>
+                    <a class="portal-link" href="{{ url_for('manager.dashboard') }}">Manager</a>
+                    <a class="portal-link" href="{{ url_for('manager.reports') }}">Reports</a>
                 {% endif %}
                 {% if current_user.is_authenticated and current_user.role == 'admin' %}
-                    <a href="{{ url_for('admin.dashboard') }}">Admin</a>
-                    <a href="{{ url_for('admin.reports') }}">Reports</a>
+                    <a class="portal-link" href="{{ url_for('admin.dashboard') }}">Admin</a>
+                    <a class="portal-link" href="{{ url_for('admin.reports') }}">Reports</a>
                 {% endif %}
             </div>
             <div class="nav-icons">
@@ -84,9 +89,6 @@
         </div>
         <div class="layout {% if not current_user.is_authenticated %}no-sidebar{% endif %}">
             {% if current_user.is_authenticated %}
-            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
-                <i class="fas fa-bars"></i>
-            </button>
             <aside class="sidebar" id="sidebar">
                 <div class="sidebar-title">Portal</div>
                 {% if current_user.role == 'admin' %}
@@ -128,6 +130,11 @@
             </section>
         </div>
     </main>
+    <footer class="site-footer">
+        <div class="container footer-wrap">
+            <p>&copy; <span id="footer-year"></span> Abils Mall. Designed by Codex cybersquad.</p>
+        </div>
+    </footer>
 
     <script>
         const toggle = document.getElementById('mode-toggle');
@@ -152,6 +159,10 @@
             navToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('open');
             });
+        }
+        const footerYear = document.getElementById('footer-year');
+        if (footerYear) {
+            footerYear.textContent = String(new Date().getFullYear());
         }
         const bell = document.getElementById('activity-bell');
         if (bell) {
