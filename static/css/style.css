@@ -2956,3 +2956,36 @@ a.btn,
         display: none !important;
     }
 }
+
+/* ==============================
+   Sidebar Slide Control (Mobile)
+   ============================== */
+@media (max-width: 992px) {
+    #sidebar {
+        position: fixed !important;
+        left: 12px !important;
+        top: 124px !important;
+        bottom: auto !important;
+        width: min(84vw, 280px) !important;
+        max-height: calc(100vh - 150px) !important;
+        overflow-y: auto !important;
+        transform: translateX(calc(-100% - 20px)) !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transition: transform 0.28s ease, opacity 0.22s ease, visibility 0.22s ease !important;
+        z-index: 1200 !important;
+    }
+
+    #sidebar.open {
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    .content {
+        position: relative;
+        z-index: 1;
+    }
+}

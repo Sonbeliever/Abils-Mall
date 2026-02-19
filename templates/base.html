@@ -142,6 +142,23 @@
             sidebarToggle.addEventListener('click', () => {
                 sidebar.classList.toggle('open');
             });
+
+            document.addEventListener('click', (event) => {
+                const isMobile = window.matchMedia('(max-width: 992px)').matches;
+                if (!isMobile) return;
+                const clickInsideSidebar = sidebar.contains(event.target);
+                const clickToggle = sidebarToggle.contains(event.target);
+                if (!clickInsideSidebar && !clickToggle) {
+                    sidebar.classList.remove('open');
+                }
+            });
+
+            sidebar.querySelectorAll('a').forEach((link) => {
+                link.addEventListener('click', () => {
+                    const isMobile = window.matchMedia('(max-width: 992px)').matches;
+                    if (isMobile) sidebar.classList.remove('open');
+                });
+            });
         }
         const navToggle = document.getElementById('nav-toggle');
         const navLinks = document.querySelector('.nav-links');
