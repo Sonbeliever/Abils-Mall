@@ -2011,6 +2011,92 @@ body.dark-mode .admin-form-card {
     font-weight: 600;
 }
 
+/* ==============================
+   Admin Responsive Refinements
+   ============================== */
+.admin-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-dashboard .admin-grid {
+    gap: 20px;
+}
+
+.admin-dashboard .admin-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.admin-dashboard .admin-actions .btn,
+.admin-dashboard .admin-actions button.btn {
+    width: 100%;
+    min-height: 40px;
+}
+
+.admin-table {
+    width: 100%;
+    table-layout: auto;
+}
+
+.admin-table th,
+.admin-table td {
+    vertical-align: middle;
+    word-break: break-word;
+}
+
+.admin-table .btn,
+.admin-table button.btn {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-height: 34px;
+    width: auto;
+    min-width: 88px;
+    border-radius: 8px;
+}
+
+.admin-table input[type="number"],
+.admin-table input[type="text"],
+.admin-table input[type="email"],
+.admin-table input[type="search"] {
+    max-width: 140px;
+    min-height: 34px;
+}
+
+.admin-table form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 1100px) {
+    .admin-dashboard {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        white-space: nowrap;
+    }
+
+    .admin-table .btn,
+    .admin-table button.btn {
+        min-width: 72px;
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+}
+
 .nav-toggle {
     display: none;
     border: 1px solid var(--border-color);
