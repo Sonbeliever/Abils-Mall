@@ -315,6 +315,19 @@ def request_manager_account():
     return redirect(url_for('auth.profile'))
 
 
+@auth_bp.route('/manager-request', methods=['GET'])
+@login_required
+def manager_request_page():
+    if current_user.role != 'buyer':
+        flash("Only buyers can access this page.", "danger")
+        return redirect(url_for('auth.profile'))
+
+    manager_request = ManagerAccountRequest.query.filter_by(user_id=current_user.id).order_by(
+        ManagerAccountRequest.created_at.desc()
+    ).first()
+    return render_template('buyer_manager_request.html', manager_request=manager_request)
+
+
 @auth_bp.route('/activities')
 @login_required
 def activities():

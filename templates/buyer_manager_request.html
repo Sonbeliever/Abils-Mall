@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 style="margin: 30px 0;">Request Manager Account</h2>
+    <div class="admin-panel" style="max-width: 700px;">
+        {% if manager_request %}
+            <p>
+                Latest request:
+                <strong>{{ manager_request.company_name }}</strong>
+                (Status: <strong>{{ manager_request.status }}</strong>
+                {% if manager_request.commission_rate is not none %}
+                    | Commission: {{ '%.2f'|format(manager_request.commission_rate) }}%
+                {% endif %}
+                )
+            </p>
+        {% endif %}
+        <form method="POST" action="{{ url_for('auth.request_manager_account') }}" class="checkout-form">
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" name="company_name" placeholder="Enter company name" required>
+            </div>
+            <button class="checkout-btn" type="submit">Send Request</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
