@@ -115,6 +115,14 @@ def create_app():
         products = Product.query.all()
         return render_template('marketplace.html', products=products)
 
+    @app.route('/about')
+    def about():
+        return render_template('about.html')
+
+    @app.route('/contact')
+    def contact():
+        return render_template('contact.html')
+
     @app.route('/setup', methods=['GET', 'POST'])
     def setup_admin():
         from models import User
