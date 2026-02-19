@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 import re
 from PIL import Image
 from extensions import db
-from models import User, Company, Referral, ReferralWallet, ReferralWithdrawalRequest, CompanyActivity, OtpVerification, ActivityLog
+from models import User, Company, Referral, ReferralWallet, ReferralWithdrawalRequest, CompanyActivity, OtpVerification, ActivityLog, ManagerAccountRequest
 from notifications import notify_user, send_email, send_sms
 import os
 import uuid
@@ -258,7 +258,9 @@ def profile():
 
     activities = []
     unread_count = None
+    manager_request = None
     if current_user.role == 'buyer':
+        manager_request = ManagerAccountRequest.query.filter_by(user_id=current_user.id).order_by(ManagerAccountRequest.created_at.desc()).first()
         last_seen_raw = session.get('buyer_last_seen_activity')
         last_seen = None
         if last_seen_raw:
@@ -281,7 +283,36 @@ def profile():
                 ActivityLog.actor_id == current_user.id
             ).count()
 
-    return render_template('profile.html', activities=activities, unread_count=unread_count)
+    return render_template('profile.html', activities=activities, unread_count=unread_count, manager_request=manager_request)
+
+
+@auth_bp.route('/request-manager-account', methods=['POST'])
+@login_required
+def request_manager_account():
+    if current_user.role != 'buyer':
+        flash("Only buyers can request manager account.", "danger")
+        return redirect(url_for('auth.profile'))
+
+    company_name = request.form.get('company_name', '').strip()
+    if not company_name:
+        flash("Company name is required.", "danger")
+        return redirect(url_for('auth.profile'))
+
+    pending = ManagerAccountRequest.query.filter_by(user_id=current_user.id, status='pending').first()
+    if pending:
+        flash("You already have a pending manager request.", "info")
+        return redirect(url_for('auth.profile'))
+
+    req = ManagerAccountRequest(
+        user_id=current_user.id,
+        company_name=company_name,
+        status='pending'
+    )
+    db.session.add(req)
+    db.session.commit()
+    log_activity(current_user.id, "MANAGER_ACCOUNT_REQUESTED", f"Requested manager access for company: {company_name}")
+    flash("Manager request submitted. Admin will review and set your commission.", "success")
+    return redirect(url_for('auth.profile'))
 
 
 @auth_bp.route('/activities')

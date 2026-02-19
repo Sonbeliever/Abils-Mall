@@ -304,3 +304,17 @@ class CompanyActivity(db.Model):
     action = db.Column(db.String(100))
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+# =========================
+# MANAGER ACCOUNT REQUEST
+# =========================
+class ManagerAccountRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    company_name = db.Column(db.String(150), nullable=False)
+    status = db.Column(db.String(20), default='pending')  # pending/approved/rejected
+    commission_rate = db.Column(db.Float)
+    admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
-from models import User, Company, Product, Order, CompanyActivity, PayoutRequest, DailyReport, Payment, DiscountRequest, ActivityLog, BankTransfer, ReferralWithdrawalRequest, ReferralWallet
+from models import User, Company, Product, Order, CompanyActivity, PayoutRequest, DailyReport, Payment, DiscountRequest, ActivityLog, BankTransfer, ReferralWithdrawalRequest, ReferralWallet, ManagerAccountRequest
 from finance import distribute_order_amount
 from activity import log_activity
 from notifications import notify_user, send_email
@@ -13,6 +13,7 @@ from io import BytesIO
 from reportlab.pdfgen import canvas
 from datetime import datetime, timedelta
 from opay_api import query_status as opay_query_status, refund as opay_refund
+from sqlalchemy import func
 import re
 import uuid
 
@@ -261,6 +262,111 @@ def create_manager():
         return redirect(url_for('admin.dashboard'))
 
     return render_template('create_manager.html', companies=companies)
+
+
+# =========================================
+# MANAGER ACCOUNT REQUESTS
+# =========================================
+@admin_bp.route('/manager-requests')
+@login_required
+def manager_requests():
+    if current_user.role != 'admin':
+        flash('Access denied', 'danger')
+        return redirect(url_for('auth.login'))
+
+    requests_list = ManagerAccountRequest.query.order_by(ManagerAccountRequest.created_at.desc()).all()
+    user_map = {u.id: u for u in User.query.all()}
+    return render_template('admin_manager_requests.html', requests=requests_list, user_map=user_map)
+
+
+@admin_bp.route('/manager-requests/approve/<int:request_id>', methods=['POST'])
+@login_required
+def approve_manager_request(request_id):
+    if current_user.role != 'admin':
+        flash('Access denied', 'danger')
+        return redirect(url_for('auth.login'))
+
+    req = ManagerAccountRequest.query.get_or_404(request_id)
+    if req.status != 'pending':
+        flash('Request already processed.', 'info')
+        return redirect(url_for('admin.manager_requests'))
+
+    try:
+        commission_rate = float(request.form.get('commission_rate', '5').strip())
+    except ValueError:
+        flash('Invalid commission rate.', 'danger')
+        return redirect(url_for('admin.manager_requests'))
+
+    if commission_rate < 0 or commission_rate > 100:
+        flash('Commission rate must be between 0 and 100.', 'danger')
+        return redirect(url_for('admin.manager_requests'))
+
+    user = User.query.get(req.user_id)
+    if not user or user.role != 'buyer':
+        flash('Only buyer accounts can be promoted to manager.', 'danger')
+        req.status = 'rejected'
+        req.admin_id = current_user.id
+        db.session.commit()
+        return redirect(url_for('admin.manager_requests'))
+
+    company = Company.query.filter(func.lower(Company.name) == req.company_name.lower()).first()
+    if not company:
+        company = Company(name=req.company_name, description='Created from manager account request')
+        db.session.add(company)
+        db.session.flush()
+
+    user.role = 'manager'
+    user.company_id = company.id
+    user.commission_rate = commission_rate
+    user.is_verified = True
+
+    req.status = 'approved'
+    req.commission_rate = commission_rate
+    req.admin_id = current_user.id
+
+    db.session.add(CompanyActivity(
+        company_id=company.id,
+        action='MANAGER_REQUEST_APPROVED',
+        description=f'Admin approved manager request for {user.username}'
+    ))
+    db.session.commit()
+    notify_user(
+        user,
+        "Manager Account Approved",
+        "Your manager account request has been approved. You can now sell your products with us.",
+        "Manager account approved. You can now sell your products with us."
+    )
+    log_activity(current_user.id, "MANAGER_REQUEST_APPROVED", f"Approved manager request for {user.email}", company_id=company.id)
+    flash('Manager request approved and user upgraded to manager.', 'success')
+    return redirect(url_for('admin.manager_requests'))
+
+
+@admin_bp.route('/manager-requests/reject/<int:request_id>', methods=['POST'])
+@login_required
+def reject_manager_request(request_id):
+    if current_user.role != 'admin':
+        flash('Access denied', 'danger')
+        return redirect(url_for('auth.login'))
+
+    req = ManagerAccountRequest.query.get_or_404(request_id)
+    if req.status != 'pending':
+        flash('Request already processed.', 'info')
+        return redirect(url_for('admin.manager_requests'))
+
+    req.status = 'rejected'
+    req.admin_id = current_user.id
+    db.session.commit()
+    user = User.query.get(req.user_id)
+    if user:
+        notify_user(
+            user,
+            "Manager Account Request Rejected",
+            "Your manager account request was rejected. Please review your company details and submit again.",
+            "Manager request rejected. Update details and try again."
+        )
+    log_activity(current_user.id, "MANAGER_REQUEST_REJECTED", f"Rejected manager request for user #{req.user_id}")
+    flash('Manager request rejected.', 'info')
+    return redirect(url_for('admin.manager_requests'))
 
 
 # =========================================
