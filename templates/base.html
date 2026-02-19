@@ -19,39 +19,17 @@
             </button>
             {% endif %}
             <a href="{{ url_for('home') }}" class="logo">Abils Mall</a>
+            {% if not current_user.is_authenticated %}
             <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
+            {% endif %}
             <div class="nav-links">
                 <a href="{{ url_for('home') }}">Home</a>
-                {% if current_user.is_authenticated and current_user.role == 'buyer' %}
-                    <a class="portal-link" href="{{ url_for('shop.products') }}">Shop</a>
-                    <a class="portal-link" href="{{ url_for('shop.cart') }}">Cart</a>
-                    <a class="portal-link" href="{{ url_for('shop.orders') }}">Orders</a>
-                    <a class="portal-link" href="{{ url_for('shop.wallet') }}">Wallet</a>
-                {% endif %}
-                {% if current_user.is_authenticated and current_user.role == 'manager' %}
-                    <a class="portal-link" href="{{ url_for('manager.dashboard') }}">Manager</a>
-                    <a class="portal-link" href="{{ url_for('manager.reports') }}">Reports</a>
-                {% endif %}
-                {% if current_user.is_authenticated and current_user.role == 'admin' %}
-                    <a class="portal-link" href="{{ url_for('admin.dashboard') }}">Admin</a>
-                    <a class="portal-link" href="{{ url_for('admin.reports') }}">Reports</a>
-                {% endif %}
             </div>
             <div class="nav-icons">
                 <button class="mode-toggle" id="mode-toggle">Dark Mode</button>
                 {% if current_user.is_authenticated %}
-                    <div class="user-chip">
-                        {% if current_user.avatar_path %}
-                            <img class="user-avatar" src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.username }} avatar">
-                        {% else %}
-                            <img class="user-avatar" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ current_user.username }} avatar">
-                        {% endif %}
-                        <span class="user-name">{{ current_user.username }}</span>
-                    </div>
-                    <a href="{{ url_for('auth.profile') }}" class="user-icon">Profile</a>
-                    <a href="{{ url_for('auth.change_password') }}" class="user-icon">Change Password</a>
                     {% if current_user.role in ['admin', 'manager', 'buyer'] %}
                         {% if current_user.role == 'admin' %}
                             {% set activity_target = url_for('admin.dashboard') %}
@@ -67,7 +45,6 @@
                             {% endif %}
                         </button>
                     {% endif %}
-                    <a href="{{ url_for('auth.logout') }}" class="user-icon">Logout</a>
                 {% else %}
                     <a href="{{ url_for('auth.login') }}" class="user-icon">Login</a>
                 {% endif %}
@@ -91,6 +68,18 @@
             {% if current_user.is_authenticated %}
             <aside class="sidebar" id="sidebar">
                 <div class="sidebar-title">Portal</div>
+                <div class="sidebar-user">
+                    <a href="{{ url_for('auth.profile') }}" class="user-chip">
+                        {% if current_user.avatar_path %}
+                            <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.username }} avatar">
+                        {% else %}
+                            <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ current_user.username }} avatar">
+                        {% endif %}
+                        <span class="user-name">{{ current_user.username }}</span>
+                    </a>
+                    <a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> Profile</a>
+                    <a href="{{ url_for('auth.change_password') }}"><i class="fas fa-key"></i> Change Password</a>
+                </div>
                 {% if current_user.role == 'admin' %}
                     <details open class="sidebar-group">
                         <summary><i class="fas fa-shield-alt"></i> Admin</summary>
@@ -123,6 +112,7 @@
                         <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
                     </details>
                 {% endif %}
+                <a class="sidebar-logout" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </aside>
             {% endif %}
             <section class="content">

@@ -2572,6 +2572,9 @@ body.dark-mode .stack-list-item {
 .sidebar {
     position: sticky;
     left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .sidebar-group {
@@ -2596,6 +2599,20 @@ body.dark-mode .stack-list-item {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.sidebar-user {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.sidebar-user .user-chip {
+    text-decoration: none;
+}
+
+.sidebar-logout {
+    margin-top: auto;
 }
 
 .sidebar-toggle {
