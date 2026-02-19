@@ -2225,6 +2225,93 @@ body.dark-mode .stack-list-item {
     max-width: 100%;
 }
 
+/* ==============================
+   Admin Mobile Layout
+   ============================== */
+@media (max-width: 768px) {
+    .admin-dashboard .admin-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .admin-dashboard .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .admin-dashboard .stat-card {
+        padding: 12px;
+    }
+
+    .admin-dashboard .stat-card h4 {
+        font-size: 13px;
+    }
+
+    .admin-dashboard .stat-card p {
+        font-size: 20px;
+    }
+
+    .admin-dashboard .admin-panel {
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    .admin-dashboard .admin-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .admin-dashboard .admin-actions .btn,
+    .admin-dashboard .admin-actions button.btn {
+        width: 100%;
+        min-height: 38px;
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    .admin-dashboard .activity-search-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .admin-dashboard .compact-input {
+        width: 100%;
+    }
+
+    .admin-dashboard .table-inline-form {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .admin-dashboard .admin-table {
+        font-size: 13px;
+    }
+
+    .admin-dashboard .admin-table th,
+    .admin-dashboard .admin-table td {
+        padding: 8px;
+    }
+
+    .sidebar {
+        width: 190px;
+        max-height: 65vh;
+        bottom: 64px;
+    }
+
+    .sidebar-toggle {
+        display: inline-flex;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
 .section-block-sm {
     margin-top: 16px;
 }
