@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
-from models import User, Company, Product, Order, CompanyActivity, PayoutRequest, DailyReport, Payment, DiscountRequest, ActivityLog, BankTransfer, ReferralWithdrawalRequest, ReferralWallet, ManagerAccountRequest
+from models import User, Company, Product, Order, CompanyActivity, PayoutRequest, DailyReport, Payment, DiscountRequest, ActivityLog, BankTransfer, ReferralWithdrawalRequest, ReferralWallet, ManagerAccountRequest, CartItem, WalletTransaction, PasswordResetToken, OtpVerification, Referral
 from finance import distribute_order_amount
 from activity import log_activity
 from notifications import notify_user, send_email
@@ -487,6 +487,23 @@ def delete_user(user_id):
         return redirect(url_for('admin.users'))
 
     user = User.query.get_or_404(user_id)
+    # Clean linked records so user deletion does not fail on foreign keys.
+    ReferralWallet.query.filter_by(user_id=user.id).delete(synchronize_session=False)
+    ReferralWithdrawalRequest.query.filter_by(user_id=user.id).delete(synchronize_session=False)
+    CartItem.query.filter_by(user_id=user.id).delete(synchronize_session=False)
+    WalletTransaction.query.filter_by(user_id=user.id).delete(synchronize_session=False)
+    PasswordResetToken.query.filter_by(user_id=user.id).delete(synchronize_session=False)
+    Referral.query.filter((Referral.referrer_id == user.id) | (Referral.referred_id == user.id)).delete(synchronize_session=False)
+    OtpVerification.query.filter((OtpVerification.user_id == user.id) | (OtpVerification.referrer_id == user.id)).delete(synchronize_session=False)
+    ManagerAccountRequest.query.filter((ManagerAccountRequest.user_id == user.id) | (ManagerAccountRequest.admin_id == user.id)).delete(synchronize_session=False)
+
+    Product.query.filter_by(manager_id=user.id).update({Product.manager_id: None}, synchronize_session=False)
+    Order.query.filter_by(buyer_id=user.id).update({Order.buyer_id: None}, synchronize_session=False)
+    BankTransfer.query.filter_by(buyer_id=user.id).update({BankTransfer.buyer_id: None}, synchronize_session=False)
+    PayoutRequest.query.filter_by(manager_id=user.id).update({PayoutRequest.manager_id: None}, synchronize_session=False)
+    DailyReport.query.filter_by(manager_id=user.id).update({DailyReport.manager_id: None}, synchronize_session=False)
+    ActivityLog.query.filter_by(actor_id=user.id).update({ActivityLog.actor_id: None}, synchronize_session=False)
+
     db.session.delete(user)
     try:
         db.session.commit()
