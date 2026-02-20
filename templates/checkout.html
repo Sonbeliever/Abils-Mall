@@ -9,21 +9,21 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Country</label>
-                        <input type="text" name="country" required>
+                        <input type="text" name="country" id="country" required>
                     </div>
                     <div class="form-group">
                         <label>State</label>
-                        <input type="text" name="state" required>
+                        <input type="text" name="state" id="state" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Area</label>
-                        <input type="text" name="area" required>
+                        <input type="text" name="area" id="area" required>
                     </div>
                     <div class="form-group">
                         <label>Bus Stop</label>
-                        <input type="text" name="bus_stop" required>
+                        <input type="text" name="bus_stop" id="bus_stop" required>
                     </div>
                 </div>
                 <div class="form-row">
@@ -52,6 +52,7 @@
                     <label>Pick Location on Map</label>
                     <div id="delivery-map" class="pickup-map"></div>
                     <small class="panel-help-text">Click the map to set your delivery point or allow location access.</small>
+                    <button class="btn btn-primary" id="map-autofill-btn" type="button" style="margin-top:10px;">Use Pinned Location</button>
                 </div>
                 <button class="checkout-btn" type="submit">Place Order</button>
             </form>
@@ -98,6 +99,11 @@
         const totalEl = document.getElementById('order_total');
         const mapUrlInput = document.getElementById('map_url');
         const addressInput = document.getElementById('address');
+        const countryInput = document.getElementById('country');
+        const stateInput = document.getElementById('state');
+        const areaInput = document.getElementById('area');
+        const busStopInput = document.getElementById('bus_stop');
+        const autofillBtn = document.getElementById('map-autofill-btn');
         if (!distanceInput || !shippingEl || !totalEl) return;
         const subtotal = {{ subtotal|tojson }};
         const totalWeight = {{ total_weight_grams|tojson }};
@@ -136,11 +142,13 @@
         }).addTo(map);
 
         let destMarker = null;
+        let pinned = null;
 
         const setDestination = (lat, lng) => {
             if (destMarker) destMarker.remove();
             destMarker = L.marker([lat, lng]).addTo(map);
             map.setView([lat, lng], 13);
+            pinned = { lat, lng };
             const km = storeLat && storeLng ? haversineKm(storeLat, storeLng, lat, lng) : 0;
             distanceInput.value = km.toFixed(2);
             if (mapUrlInput) {
@@ -149,9 +157,30 @@
             recalc();
         };
 
+        const reverseFill = (lat, lng) => {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lng)}`)
+                .then((r) => r.json())
+                .then((data) => {
+                    const addr = (data && data.address) || {};
+                    if (countryInput) countryInput.value = addr.country || "";
+                    if (stateInput) stateInput.value = addr.state || addr.region || "";
+                    if (areaInput) areaInput.value = addr.city || addr.town || addr.village || addr.suburb || "";
+                    if (busStopInput) busStopInput.value = addr.neighbourhood || addr.suburb || addr.road || "";
+                    if (addressInput) addressInput.value = data.display_name || "";
+                })
+                .catch(() => {});
+        };
+
         map.on('click', (e) => {
             setDestination(e.latlng.lat, e.latlng.lng);
         });
+
+        if (autofillBtn) {
+            autofillBtn.addEventListener('click', () => {
+                if (!pinned) return;
+                reverseFill(pinned.lat, pinned.lng);
+            });
+        }
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
