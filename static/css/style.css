@@ -2145,7 +2145,7 @@ body.dark-mode .admin-form-card {
     }
 
     #sidebar {
-        width: min(76vw, 240px) !important;
+        width: min(68vw, 210px) !important;
     }
 }
 
@@ -2180,6 +2180,10 @@ body.dark-mode .admin-form-card {
 
     .flash-stack {
         margin-top: 10px;
+    }
+
+    #sidebar {
+        width: min(64vw, 196px) !important;
     }
 }
 

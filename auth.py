@@ -203,6 +203,17 @@ def logout():
 @login_required
 def profile():
     if request.method == 'POST':
+        new_username = request.form.get('username', '').strip()
+        if not new_username:
+            flash("Username is required.", "danger")
+            return redirect(url_for('auth.profile'))
+
+        existing_user = User.query.filter(User.username == new_username, User.id != current_user.id).first()
+        if existing_user:
+            flash("That username is already taken.", "danger")
+            return redirect(url_for('auth.profile'))
+
+        current_user.username = new_username
         current_user.phone = request.form.get('phone', '').strip()
         current_user.notify_email = True if request.form.get('notify_email') == 'on' else False
         current_user.notify_sms = True if request.form.get('notify_sms') == 'on' else False
@@ -310,6 +321,16 @@ def request_manager_account():
     )
     db.session.add(req)
     db.session.commit()
+
+    admin_users = User.query.filter_by(role='admin').all()
+    for admin_user in admin_users:
+        send_email(
+            admin_user.email,
+            "New Manager Account Request",
+            f"User {current_user.username} ({current_user.email}) requested manager access for company: {company_name}.",
+            enabled=True
+        )
+
     log_activity(current_user.id, "MANAGER_ACCOUNT_REQUESTED", f"Requested manager access for company: {company_name}")
     flash("Manager request submitted. Admin will review and set your commission.", "success")
     return redirect(url_for('auth.profile'))

@@ -25,6 +25,10 @@
         </div>
         {% endif %}
         <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" value="{{ current_user.username }}" required>
+        </div>
+        <div class="form-group">
             <label>Email</label>
             <input type="email" value="{{ current_user.email }}" disabled>
         </div>
