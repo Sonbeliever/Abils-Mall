@@ -109,6 +109,22 @@ def create_app():
     app.register_blueprint(shop_bp, url_prefix='/shop')
     app.register_blueprint(payments_bp, url_prefix='/payments')
 
+    @app.context_processor
+    def inject_avatar_url():
+        def avatar_url(user):
+            default_path = url_for('static', filename='images/default_avatar.svg')
+            avatar_path = getattr(user, 'avatar_path', None)
+            if not avatar_path:
+                return default_path
+
+            normalized = str(avatar_path).replace('\\', '/').strip('/')
+            candidate = os.path.join(app.root_path, 'static', normalized)
+            if not os.path.isfile(candidate):
+                return default_path
+            return url_for('static', filename=normalized)
+
+        return {'avatar_url': avatar_url}
+
     @app.route('/')
     def home():
         from models import Product
