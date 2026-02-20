@@ -14,6 +14,7 @@ from reportlab.pdfgen import canvas
 from datetime import datetime, timedelta
 from opay_api import query_status as opay_query_status, refund as opay_refund
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 import re
 import uuid
 
@@ -487,7 +488,19 @@ def delete_user(user_id):
 
     user = User.query.get_or_404(user_id)
     db.session.delete(user)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError as exc:
+        db.session.rollback()
+        err = str(exc.orig)
+        if 'referral_wallet_user_id_fkey' in err:
+            flash('Cannot delete user: referral wallet exists. Remove referral wallet first.', 'danger')
+        elif 'product_manager_id_fkey' in err:
+            flash('Cannot delete user: this manager still owns products. Reassign/delete products first.', 'danger')
+        else:
+            flash('Cannot delete user: this account is linked to existing records.', 'danger')
+        return redirect(url_for('admin.users'))
+
     log_activity(current_user.id, "USER_DELETED", f"Deleted user {user.email}", company_id=user.company_id)
     flash('User deleted successfully.', 'success')
     return redirect(url_for('admin.users'))

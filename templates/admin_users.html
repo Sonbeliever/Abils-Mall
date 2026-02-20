@@ -19,7 +19,7 @@
             <td>{{ user.id }}</td>
             <td>
                 {% if user.avatar_path %}
-                    <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename=user.avatar_path) }}" alt="{{ user.username }} avatar">
+                    <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename=user.avatar_path) }}" alt="{{ user.username }} avatar" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default_avatar.svg') }}';">
                 {% else %}
                     <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ user.username }} avatar">
                 {% endif %}
