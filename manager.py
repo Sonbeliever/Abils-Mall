@@ -14,10 +14,40 @@ from io import BytesIO
 from reportlab.pdfgen import canvas
 from datetime import datetime
 from opay_api import query_status as opay_query_status
+import cloudinary
+import cloudinary.uploader
 
 manager_bp = Blueprint('manager', __name__, template_folder='templates', url_prefix='/manager')
 ALLOWED_PRODUCT_IMAGE_EXTS = {"png", "jpg", "jpeg", "gif", "webp"}
 ALLOWED_REPORT_EXTS = {"pdf"}
+
+
+def _upload_product_image_cloud(file_storage):
+    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME", "").strip()
+    api_key = os.getenv("CLOUDINARY_API_KEY", "").strip()
+    api_secret = os.getenv("CLOUDINARY_API_SECRET", "").strip()
+    base_folder = os.getenv("CLOUDINARY_FOLDER", "abils-mall").strip() or "abils-mall"
+    if not (cloud_name and api_key and api_secret):
+        return None
+
+    cloudinary.config(
+        cloud_name=cloud_name,
+        api_key=api_key,
+        api_secret=api_secret,
+        secure=True,
+    )
+    try:
+        result = cloudinary.uploader.upload(
+            file_storage,
+            folder=f"{base_folder}/products",
+            resource_type="image",
+            use_filename=True,
+            unique_filename=True,
+            overwrite=False,
+        )
+        return result.get("secure_url")
+    except Exception:
+        return None
 
 
 def _save_product_image(file_storage):
@@ -25,6 +55,10 @@ def _save_product_image(file_storage):
     ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else ''
     if ext not in ALLOWED_PRODUCT_IMAGE_EXTS:
         return None
+
+    cloud_url = _upload_product_image_cloud(file_storage)
+    if cloud_url:
+        return cloud_url
 
     upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'products')
     os.makedirs(upload_dir, exist_ok=True)
