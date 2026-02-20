@@ -135,6 +135,23 @@
             <p>&copy; <span id="footer-year"></span> Abils Mall. Designed by Codex cybersquad.</p>
         </div>
     </footer>
+    <div id="image-lightbox" class="image-lightbox" aria-hidden="true">
+        <div class="image-lightbox-card" id="image-lightbox-card">
+            <img id="image-lightbox-img" src="" alt="Expanded product image">
+            <div class="image-lightbox-meta">
+                <h3 id="lb-name">Product</h3>
+                <p id="lb-desc">-</p>
+                <div class="lb-grid">
+                    <div><strong>Company:</strong> <span id="lb-company">-</span></div>
+                    <div><strong>Price:</strong> <span id="lb-price">-</span></div>
+                    <div><strong>Sale Price:</strong> <span id="lb-sale">-</span></div>
+                    <div><strong>Stock:</strong> <span id="lb-stock">-</span></div>
+                    <div><strong>Size:</strong> <span id="lb-size">-</span></div>
+                    <div><strong>Weight:</strong> <span id="lb-weight">-</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const toggle = document.getElementById('mode-toggle');
@@ -201,6 +218,44 @@
                 if (isOpen && badge && seenForm) {
                     seenForm.submit();
                 }
+            });
+        }
+
+        const lightbox = document.getElementById('image-lightbox');
+        const lightboxCard = document.getElementById('image-lightbox-card');
+        const lightboxImg = document.getElementById('image-lightbox-img');
+        const lbName = document.getElementById('lb-name');
+        const lbCompany = document.getElementById('lb-company');
+        const lbPrice = document.getElementById('lb-price');
+        const lbSale = document.getElementById('lb-sale');
+        const lbStock = document.getElementById('lb-stock');
+        const lbSize = document.getElementById('lb-size');
+        const lbWeight = document.getElementById('lb-weight');
+        const lbDesc = document.getElementById('lb-desc');
+        if (lightbox && lightboxImg) {
+            document.addEventListener('dblclick', (event) => {
+                const img = event.target.closest('.product-zoomable');
+                if (!img) return;
+                event.preventDefault();
+                event.stopPropagation();
+                lightboxImg.src = img.currentSrc || img.src;
+                if (lbName) lbName.textContent = img.dataset.productName || 'Product';
+                if (lbCompany) lbCompany.textContent = img.dataset.productCompany || '-';
+                if (lbPrice) lbPrice.textContent = img.dataset.productPrice ? `₦${img.dataset.productPrice}` : '-';
+                if (lbSale) lbSale.textContent = img.dataset.productSale ? `₦${img.dataset.productSale}` : '-';
+                if (lbStock) lbStock.textContent = img.dataset.productStock || '-';
+                if (lbSize) lbSize.textContent = img.dataset.productSize || '-';
+                if (lbWeight) lbWeight.textContent = img.dataset.productWeight ? `${img.dataset.productWeight} g` : '-';
+                if (lbDesc) lbDesc.textContent = img.dataset.productDescription || '-';
+                lightbox.classList.add('open');
+                lightbox.setAttribute('aria-hidden', 'false');
+            });
+
+            lightbox.addEventListener('click', (event) => {
+                if (lightboxCard && lightboxCard.contains(event.target)) return;
+                lightbox.classList.remove('open');
+                lightbox.setAttribute('aria-hidden', 'true');
+                lightboxImg.src = '';
             });
         }
     </script>

@@ -135,7 +135,7 @@ def create_app():
             products_query = products_query.filter(
                 Product.name.ilike(like) | Product.description.ilike(like)
             )
-        products = products_query.all()
+        products = products_query.order_by(Product.created_at.desc()).all()
         return render_template('marketplace.html', products=products, search_query=query)
 
     @app.route('/about')

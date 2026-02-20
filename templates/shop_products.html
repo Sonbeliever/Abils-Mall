@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container page-shell">
     <h1 class="page-head">Shop Products</h1>
-    <div class="products-grid">
+    <div class="products-grid mobile-two-columns" id="shop-products-grid">
         {% for product in products %}
             <div class="product-card">
                 {% set image_src = product.image_url %}
@@ -10,7 +10,19 @@
                     {% set image_src = url_for('static', filename=image_src) %}
                 {% endif %}
                 <a href="{{ url_for('shop.product_detail', product_id=product.id) }}">
-                    <img src="{{ image_src or url_for('static', filename='images/headphones.jpg') }}" class="product-img" alt="{{ product.name }}">
+                    <img
+                        src="{{ image_src or url_for('static', filename='images/headphones.jpg') }}"
+                        class="product-img product-zoomable"
+                        alt="{{ product.name }}"
+                        data-product-name="{{ product.name|e }}"
+                        data-product-company="{{ (product.company.name if product.company else '')|e }}"
+                        data-product-price="{{ '{:,.0f}'.format(product.price)|e }}"
+                        data-product-sale="{{ ('{:,.0f}'.format(product.sale_price) if product.sale_price else '')|e }}"
+                        data-product-stock="{{ product.stock }}"
+                        data-product-size="{{ (product.size_desc or '')|e }}"
+                        data-product-weight="{{ product.weight_grams if product.weight_grams is not none else '' }}"
+                        data-product-description="{{ (product.description or '')|e }}"
+                    >
                 </a>
                 <div class="product-info">
                     <div class="product-title">{{ product.name }}</div>
@@ -31,4 +43,26 @@
         {% endfor %}
     </div>
 </div>
+<script>
+    (function () {
+        const grid = document.getElementById('shop-products-grid');
+        if (!grid) return;
+        const refreshMs = 30000;
+        setInterval(async () => {
+            if (document.hidden) return;
+            try {
+                const res = await fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                if (!res.ok) return;
+                const html = await res.text();
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const nextGrid = doc.getElementById('shop-products-grid');
+                if (nextGrid) {
+                    grid.innerHTML = nextGrid.innerHTML;
+                }
+            } catch (e) {
+                // ignore background refresh errors
+            }
+        }, refreshMs);
+    })();
+</script>
 {% endblock %}

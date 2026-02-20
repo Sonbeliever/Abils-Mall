@@ -2185,6 +2185,94 @@ body.dark-mode .admin-form-card {
     #sidebar {
         width: min(64vw, 196px) !important;
     }
+
+    .products-grid.mobile-two-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    .products-grid.mobile-two-columns .product-card {
+        min-width: 0;
+    }
+
+    .products-grid.mobile-two-columns .product-img {
+        height: 140px;
+        object-fit: cover;
+    }
+}
+
+.product-zoomable {
+    cursor: zoom-in;
+}
+
+.image-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 3000;
+}
+
+.image-lightbox.open {
+    display: flex;
+}
+
+.image-lightbox-card {
+    width: min(96vw, 980px);
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.image-lightbox img {
+    max-width: min(92vw, 980px);
+    max-height: 88vh;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.image-lightbox-meta {
+    padding: 14px;
+    overflow: auto;
+    max-height: 88vh;
+}
+
+.image-lightbox-meta h3 {
+    margin: 0 0 8px;
+}
+
+.image-lightbox-meta p {
+    margin: 0 0 10px;
+    color: var(--text-light);
+}
+
+.lb-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .image-lightbox-card {
+        grid-template-columns: 1fr;
+    }
+
+    .image-lightbox img {
+        max-height: 46vh;
+    }
+
+    .image-lightbox-meta {
+        max-height: 42vh;
+    }
 }
 
 .nav-toggle {

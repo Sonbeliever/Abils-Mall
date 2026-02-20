@@ -16,7 +16,7 @@ shop_bp = Blueprint('shop', __name__, template_folder='templates', url_prefix='/
 # =========================================
 @shop_bp.route('/products')
 def products():
-    all_products = Product.query.all()
+    all_products = Product.query.order_by(Product.created_at.desc()).all()
     return render_template('shop_products.html', products=all_products)
 
 
