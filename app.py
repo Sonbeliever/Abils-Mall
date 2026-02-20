@@ -128,8 +128,15 @@ def create_app():
     @app.route('/')
     def home():
         from models import Product
-        products = Product.query.all()
-        return render_template('marketplace.html', products=products)
+        query = request.args.get('q', '').strip()
+        products_query = Product.query
+        if query:
+            like = f"%{query}%"
+            products_query = products_query.filter(
+                Product.name.ilike(like) | Product.description.ilike(like)
+            )
+        products = products_query.all()
+        return render_template('marketplace.html', products=products, search_query=query)
 
     @app.route('/about')
     def about():

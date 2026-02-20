@@ -17,6 +17,10 @@
                 <i class="fas fa-bars"></i>
             </button>
             <a href="{{ url_for('home') }}" class="logo">Abils Mall</a>
+            <form class="nav-search" method="GET" action="{{ url_for('home') }}">
+                <input type="search" name="q" placeholder="Search products..." value="{{ request.args.get('q', '') }}">
+                <button type="submit" aria-label="Search products"><i class="fas fa-search"></i></button>
+            </form>
             <div class="nav-icons">
                 <button class="mode-toggle mode-icon" id="mode-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
                     <i id="mode-icon" class="fas fa-moon" aria-hidden="true"></i>

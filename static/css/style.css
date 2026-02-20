@@ -2097,6 +2097,58 @@ body.dark-mode .admin-form-card {
     }
 }
 
+/* ==============================
+   Top Search + Menu Width
+   ============================== */
+.nav-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 12px;
+    margin-right: auto;
+    max-width: 430px;
+    width: min(44vw, 430px);
+}
+
+.nav-search input[type="search"] {
+    width: 100%;
+    min-height: 38px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--card-background);
+    color: var(--text-color);
+    padding: 0 12px;
+}
+
+.nav-search button {
+    min-width: 38px;
+    min-height: 38px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--card-background);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+}
+
+.sidebar {
+    width: 220px;
+}
+
+@media (max-width: 992px) {
+    .nav-search {
+        width: min(52vw, 280px);
+        margin-left: 0;
+    }
+
+    #sidebar {
+        width: min(76vw, 240px) !important;
+    }
+}
+
 .nav-toggle {
     display: none;
     border: 1px solid var(--border-color);
