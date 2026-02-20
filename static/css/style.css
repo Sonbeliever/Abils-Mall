@@ -2149,6 +2149,40 @@ body.dark-mode .admin-form-card {
     }
 }
 
+/* Keep flash notifications visible below fixed navbar on small phones */
+@media (max-width: 768px) {
+    .main-nav {
+        flex-wrap: nowrap !important;
+        gap: 6px;
+    }
+
+    .logo {
+        font-size: 1rem;
+    }
+
+    .nav-search {
+        width: min(44vw, 200px);
+    }
+
+    .nav-search input[type="search"] {
+        min-height: 34px;
+        font-size: 13px;
+    }
+
+    .nav-search button {
+        min-width: 34px;
+        min-height: 34px;
+    }
+
+    .main-content {
+        margin-top: 138px;
+    }
+
+    .flash-stack {
+        margin-top: 10px;
+    }
+}
+
 .nav-toggle {
     display: none;
     border: 1px solid var(--border-color);
