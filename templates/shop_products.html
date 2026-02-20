@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container page-shell">
     <h1 class="page-head">Shop Products</h1>
-    <div class="products-grid mobile-two-columns" id="shop-products-grid">
+    <div class="products-grid" id="shop-products-grid">
         {% for product in products %}
             <div class="product-card">
                 {% set image_src = product.image_url %}
