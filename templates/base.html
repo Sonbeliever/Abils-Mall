@@ -152,6 +152,37 @@
             </div>
         </div>
     </div>
+    <div id="review-modal" class="review-modal" aria-hidden="true">
+        <div class="review-card">
+            <div class="review-head">
+                <h3>Write a Review</h3>
+                <button type="button" class="review-close" id="review-close">×</button>
+            </div>
+            <form method="POST" action="{{ url_for('shop.submit_review') }}" class="review-form">
+                <input type="hidden" name="product_id" id="review-product-id">
+                <div class="form-group">
+                    <label>Product</label>
+                    <input type="text" id="review-product-name" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Rating</label>
+                    <select name="rating" required>
+                        <option value="">Select</option>
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="3">3 - Good</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="1">1 - Poor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Review</label>
+                    <textarea name="review" rows="4" placeholder="Write your feedback..." required></textarea>
+                </div>
+                <button class="btn btn-primary" type="submit">Submit Review</button>
+            </form>
+        </div>
+    </div>
 
     <script>
         const toggle = document.getElementById('mode-toggle');
@@ -256,6 +287,36 @@
                 lightbox.classList.remove('open');
                 lightbox.setAttribute('aria-hidden', 'true');
                 lightboxImg.src = '';
+            });
+        }
+
+        const reviewModal = document.getElementById('review-modal');
+        const reviewClose = document.getElementById('review-close');
+        const reviewProductId = document.getElementById('review-product-id');
+        const reviewProductName = document.getElementById('review-product-name');
+        if (reviewModal) {
+            document.addEventListener('click', (event) => {
+                const btn = event.target.closest('.review-btn');
+                if (!btn) return;
+                const pid = btn.getAttribute('data-product-id');
+                const pname = btn.getAttribute('data-product-name');
+                if (reviewProductId) reviewProductId.value = pid || '';
+                if (reviewProductName) reviewProductName.value = pname || '';
+                reviewModal.classList.add('open');
+                reviewModal.setAttribute('aria-hidden', 'false');
+            });
+        }
+        if (reviewClose && reviewModal) {
+            reviewClose.addEventListener('click', () => {
+                reviewModal.classList.remove('open');
+                reviewModal.setAttribute('aria-hidden', 'true');
+            });
+        }
+        if (reviewModal) {
+            reviewModal.addEventListener('click', (event) => {
+                if (event.target !== reviewModal) return;
+                reviewModal.classList.remove('open');
+                reviewModal.setAttribute('aria-hidden', 'true');
             });
         }
     </script>

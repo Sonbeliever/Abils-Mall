@@ -4,8 +4,8 @@ from flask_login import login_required, current_user
 import os
 
 from extensions import db
-from models import Product, CartItem, Order, OrderItem, CompanyActivity, DiscountCustomer, DiscountRequest, WalletTransaction
-from notifications import notify_user
+from models import Product, CartItem, Order, OrderItem, CompanyActivity, DiscountCustomer, DiscountRequest, WalletTransaction, User
+from notifications import notify_user, send_email
 from activity import log_activity
 
 shop_bp = Blueprint('shop', __name__, template_folder='templates', url_prefix='/shop')
@@ -262,6 +262,48 @@ def request_discount(company_id):
     db.session.commit()
     log_activity(current_user.id, "DISCOUNT_REQUESTED", f"Discount requested for company {company_id}", company_id=company_id)
     flash('Discount request submitted.', 'success')
+    return redirect(url_for('shop.products'))
+
+
+# =========================================
+# BUYER: SUBMIT PRODUCT REVIEW
+# =========================================
+@shop_bp.route('/reviews/submit', methods=['POST'])
+@login_required
+def submit_review():
+    product_id = request.form.get('product_id', '').strip()
+    rating = request.form.get('rating', '').strip()
+    review = request.form.get('review', '').strip()
+
+    if not product_id.isdigit():
+        flash('Invalid product.', 'danger')
+        return redirect(url_for('shop.products'))
+    if rating not in {'1', '2', '3', '4', '5'}:
+        flash('Please select a rating.', 'danger')
+        return redirect(url_for('shop.products'))
+    if not review:
+        flash('Please write a review.', 'danger')
+        return redirect(url_for('shop.products'))
+
+    product = Product.query.get(int(product_id))
+    if not product:
+        flash('Product not found.', 'danger')
+        return redirect(url_for('shop.products'))
+
+    admins = User.query.filter_by(role='admin').all()
+    subject = f"New Product Review: {product.name}"
+    body = (
+        f"Product: {product.name}\n"
+        f"Product ID: {product.id}\n"
+        f"Company ID: {product.company_id}\n"
+        f"Reviewer: {current_user.username} ({current_user.email})\n"
+        f"Rating: {rating}/5\n\n"
+        f"Review:\n{review}\n"
+    )
+    for admin in admins:
+        send_email(admin.email, subject, body, enabled=True)
+
+    flash('Review submitted. Thank you!', 'success')
     return redirect(url_for('shop.products'))
 
 

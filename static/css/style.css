@@ -2205,6 +2205,65 @@ body.dark-mode .admin-form-card {
     cursor: zoom-in;
 }
 
+.product-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-light);
+    margin: 6px 0 4px;
+}
+
+.product-rating .stars {
+    letter-spacing: 1px;
+}
+
+.product-rating .stars.empty {
+    color: #c7c7c7;
+}
+
+.review-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 3100;
+}
+
+.review-modal.open {
+    display: flex;
+}
+
+.review-card {
+    width: min(94vw, 520px);
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+}
+
+.review-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.review-close {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.review-form .form-group {
+    margin-bottom: 10px;
+}
 .image-lightbox {
     position: fixed;
     inset: 0;

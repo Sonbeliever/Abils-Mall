@@ -34,6 +34,10 @@
                 >
                 <div class="product-info">
                     <div class="product-title">{{ product.name }}</div>
+                    <div class="product-rating">
+                        <span class="stars empty">★★★★★</span>
+                        <span class="rating-count">(No ratings yet)</span>
+                    </div>
                     <div class="product-price">
                         <span class="current-price">₦{{ "{:,.0f}".format(product.sale_price or product.price) }}</span>
                         {% if product.sale_price %}
@@ -45,6 +49,7 @@
                     {% else %}
                         <p style="margin-top:10px;">Login as buyer to purchase.</p>
                     {% endif %}
+                    <button class="btn btn-primary review-btn" type="button" data-product-id="{{ product.id }}" data-product-name="{{ product.name|e }}">Write Review</button>
                 </div>
                 </div>
             {% endfor %}
