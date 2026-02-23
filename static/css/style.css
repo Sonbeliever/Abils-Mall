@@ -3452,16 +3452,53 @@ a.btn,
 /* ==============================
    Marketplace + Card Polish
    ============================== */
+/* Primary business nav style (clean white glass + orange accents) */
 .top-bar {
-    background: linear-gradient(90deg, #f8f4ff, #ffffff);
+    background: linear-gradient(90deg, #fff6f1, #ffffff);
     color: #3a2a22;
+    border-bottom: 1px solid rgba(255, 143, 31, 0.18);
+}
+
+.site-header {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.82));
+    border-bottom: 1px solid rgba(255, 143, 31, 0.18);
 }
 
 .main-nav {
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 0 12px 30px rgba(255, 106, 61, 0.12);
+}
+
+.logo {
+    color: #2b1a12 !important;
+}
+
+.nav-icons a,
+.nav-icons button {
+    color: #2b1a12;
+}
+
+.nav-search input[type="search"] {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 143, 31, 0.22);
+    color: #2b1a12;
+}
+
+.nav-search button {
+    background: linear-gradient(135deg, #ffb180, #ff8f1f);
+    border-color: rgba(255, 143, 31, 0.35);
+    color: #2b1a12;
+}
+
+.nav-search button:hover,
+.mode-toggle:hover,
+.nav-login-link:hover,
+.auth-nav-link:hover {
+    background: linear-gradient(135deg, #ff9a3d, #ff6a3d);
+    color: #ffffff;
 }
 
 .market-simple .main-content {
