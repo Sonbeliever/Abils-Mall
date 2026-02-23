@@ -41,6 +41,21 @@ body {
     100% { transform: translateY(0px); }
 }
 
+@keyframes logoGlow {
+    0% {
+        box-shadow: 0 0 0 rgba(118, 214, 255, 0);
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        box-shadow: 0 0 34px rgba(118, 214, 255, 0.28), 0 0 68px rgba(201, 133, 255, 0.18);
+        transform: translateY(-2px) scale(1.015);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(118, 214, 255, 0);
+        transform: translateY(0px) scale(1);
+    }
+}
+
 .landing-bg {
     position: fixed;
     inset: 0;
@@ -134,6 +149,12 @@ body {
     background: rgba(0, 0, 0, 0.45);
     padding: 6px;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: logoGlow 3.6s ease-in-out infinite;
+    transition: transform 0.25s ease;
+}
+
+.brand-logo:hover {
+    transform: scale(1.03);
 }
 
 .glass-sidebar h3 {
@@ -203,6 +224,12 @@ body {
     text-decoration: none;
     font-size: 13px;
     letter-spacing: 0.2px;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.top-links a:hover {
+    color: #e9f4ff;
+    opacity: 0.95;
 }
 
 .hero-grid {
