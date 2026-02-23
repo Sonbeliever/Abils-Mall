@@ -19,9 +19,12 @@
     <main class="landing-shell">
         <section class="glass-frame">
             <aside class="glass-sidebar">
-                <div class="brand-mark">ABILS</div>
-                <h3>Abils Mall</h3>
-                <p>Digital commerce platform for customers, managers, and admins.</p>
+                <div class="brand-logo-wrap">
+                    <img class="brand-logo" src="{{ url_for('static', filename='images/abils_logo.png') }}" alt="Abils Mall logo" onerror="this.style.display='none';document.getElementById('brand-fallback').style.display='grid';">
+                    <div class="brand-mark" id="brand-fallback" style="display:none;">AB</div>
+                </div>
+                <h3>Abils Mall Katsina</h3>
+                <p>Digital commerce platform for customers, managers, and admins with secure workflows and operational visibility.</p>
                 <nav>
                     <a href="{{ url_for('home') }}">Home</a>
                     <a href="{{ url_for('marketplace') }}">Marketplace</a>
@@ -42,12 +45,12 @@
 
                 <div class="hero-grid">
                     <article class="hero-copy glass-card">
-                        <span class="hero-tag">Build Growth With Abils</span>
-                        <h1>Modern Commerce for a Stronger Community</h1>
+                        <span class="hero-tag">Abils Digital Commerce</span>
+                        <h1>Professional E-Commerce Experience For Your Brand</h1>
                         <p>
-                            Abils Mall connects customers, managers, and admin operations in one
-                            secure platform with product management, smart shipping flow, and
-                            automated request approvals.
+                            Abils Mall connects buyers, managers, and admin operations in one platform.
+                            The system is built for speed, trust, and scale: product workflow, smart shipping,
+                            manager onboarding, and role-based control in a single dashboard ecosystem.
                         </p>
                         <div class="hero-actions">
                             <a class="primary-btn" href="{{ url_for('marketplace') }}">Explore Products</a>
@@ -56,17 +59,17 @@
                     </article>
 
                     <article class="hero-panel glass-card">
-                        <h4>Platform Highlights</h4>
+                        <h4>Business Highlights</h4>
                         <ul>
-                            <li>Manager request and commission approval workflow</li>
+                            <li>Structured manager request and commission approval</li>
                             <li>Map-based checkout and pickup automation</li>
-                            <li>Role-based dashboards with activity tracking</li>
-                            <li>Persistent media upload for production hosting</li>
+                            <li>Role-based admin, manager, and buyer dashboards</li>
+                            <li>Production-ready persistent image handling</li>
                         </ul>
                         <div class="stats">
                             <div>
-                                <strong>3 Roles</strong>
-                                <span>Admin / Manager / Buyer</span>
+                                <strong>3 Portals</strong>
+                                <span>Admin, Manager, Buyer</span>
                             </div>
                             <div>
                                 <strong>Real-time</strong>
@@ -79,6 +82,33 @@
                         </div>
                     </article>
                 </div>
+
+                <section class="about-grid">
+                    <article class="about-card glass-card">
+                        <h4>About Us</h4>
+                        <p>
+                            Abils Mall Katsina is a modern business and creative ecosystem focused on fabrics,
+                            boutique fashion, beauty, salon services, and media production. Our digital platform
+                            exists to make these services more accessible, transparent, and scalable.
+                        </p>
+                        <p>
+                            We combine business quality with technology discipline so customers can trust delivery,
+                            managers can operate efficiently, and leadership can monitor growth from one central system.
+                        </p>
+                    </article>
+                    <article class="about-card glass-card">
+                        <h4>What We Offer</h4>
+                        <div class="pill-wrap">
+                            <span class="pill">Fabrics</span>
+                            <span class="pill">Boutique</span>
+                            <span class="pill">Fashion Design</span>
+                            <span class="pill">Makeup</span>
+                            <span class="pill">Salon</span>
+                            <span class="pill">Photography</span>
+                        </div>
+                        <a class="primary-btn mini" href="{{ url_for('contact') }}">Contact Team</a>
+                    </article>
+                </section>
             </section>
         </section>
     </main>

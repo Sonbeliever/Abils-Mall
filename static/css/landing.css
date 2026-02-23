@@ -24,6 +24,23 @@ body {
     overflow-x: hidden;
 }
 
+@keyframes riseIn {
+    from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes floatPulse {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
 .landing-bg {
     position: fixed;
     inset: 0;
@@ -43,6 +60,7 @@ body {
     right: -120px;
     top: -80px;
     background: radial-gradient(circle at 30% 30%, #fff6, #ffffff10 70%);
+    animation: floatPulse 8s ease-in-out infinite;
 }
 
 .orb-b {
@@ -51,6 +69,7 @@ body {
     left: -180px;
     bottom: -140px;
     background: radial-gradient(circle at 30% 30%, #fff5, #ffffff10 72%);
+    animation: floatPulse 10s ease-in-out infinite;
 }
 
 .orb-c {
@@ -59,6 +78,7 @@ body {
     left: 34%;
     top: 58%;
     background: radial-gradient(circle at 40% 40%, #3df3f455, #ffffff05 75%);
+    animation: floatPulse 9s ease-in-out infinite;
 }
 
 .landing-shell {
@@ -79,6 +99,7 @@ body {
     backdrop-filter: blur(14px);
     box-shadow: 0 18px 48px rgba(36, 0, 70, 0.42);
     overflow: hidden;
+    animation: riseIn 0.75s ease;
 }
 
 .glass-sidebar {
@@ -98,6 +119,21 @@ body {
     letter-spacing: 1px;
     background: linear-gradient(135deg, #41ecff, #8db6ff);
     color: #1a1347;
+}
+
+.brand-logo-wrap {
+    display: grid;
+    place-items: start;
+    min-height: 72px;
+}
+
+.brand-logo {
+    width: 120px;
+    height: auto;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .glass-sidebar h3 {
@@ -181,6 +217,12 @@ body {
     border-radius: 20px;
     backdrop-filter: blur(12px);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 34px rgba(20, 0, 45, 0.28);
 }
 
 .hero-copy {
@@ -237,6 +279,51 @@ body {
     color: var(--text);
     border: 1px solid var(--stroke);
     background: rgba(255, 255, 255, 0.1);
+}
+
+.about-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 16px;
+}
+
+.about-card {
+    padding: 20px 22px;
+}
+
+.about-card h4 {
+    margin: 0 0 10px;
+    font-size: 1.02rem;
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+}
+
+.about-card p {
+    margin: 0 0 10px;
+    line-height: 1.7;
+    color: var(--text-soft);
+    font-size: 14px;
+}
+
+.pill-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.pill {
+    display: inline-flex;
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 12px;
+    border: 1px solid var(--stroke);
+    background: rgba(255, 255, 255, 0.11);
+}
+
+.primary-btn.mini {
+    padding: 9px 14px;
+    font-size: 12px;
 }
 
 .hero-panel {
@@ -299,6 +386,10 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
     .top-nav {
         justify-content: flex-start;
     }
@@ -308,5 +399,9 @@ body {
         justify-content: space-between;
         gap: 12px;
         overflow-x: auto;
+    }
+
+    .brand-logo {
+        width: 108px;
     }
 }
