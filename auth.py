@@ -83,11 +83,15 @@ def register():
         email    = request.form['email']
         phone    = request.form.get('phone', '').strip()
         password = request.form['password']
+        confirm_password = request.form.get('confirm_password', '')
         role     = 'buyer'  # PUBLIC can only register as buyers
         ref_code = request.form.get('ref', '').strip()
 
         if not _is_strong_password(password):
             flash("Password must be at least 8 characters and include upper, lower, number, and symbol.", "danger")
+            return redirect(url_for('auth.register'))
+        if password != confirm_password:
+            flash("Passwords do not match.", "danger")
             return redirect(url_for('auth.register'))
 
         if User.query.filter((User.username==username)|(User.email==email)).first():

@@ -3659,3 +3659,56 @@ a.btn,
 .product-rating.rated .stars {
     color: #ff9f1c;
 }
+
+/* ==============================
+   Password Visibility Toggle
+   ============================== */
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-field input {
+    padding-right: 44px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* ==============================
+   Search Visibility (Light/Dark)
+   ============================== */
+.nav-search input[type="search"] {
+    background: rgba(255, 255, 255, 0.92);
+    color: #2b1a12;
+}
+
+.nav-search button {
+    color: #2b1a12;
+}
+
+body.dark-mode .nav-search input[type="search"] {
+    background: rgba(20, 20, 20, 0.7);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #f5f5f5;
+}
+
+body.dark-mode .nav-search input[type="search"]::placeholder {
+    color: rgba(245, 245, 245, 0.7);
+}
+
+body.dark-mode .nav-search button {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f5f5;
+    border-color: rgba(255, 255, 255, 0.16);
+}
