@@ -7,20 +7,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3">
 </head>
-<body>
+{% set is_auth_page = request.endpoint in ['auth.login', 'auth.register'] %}
+<body class="{% if is_auth_page %}auth-simple{% endif %}">
     <header class="site-header">
+        {% if not is_auth_page %}
         <div class="top-bar">
             <p>Free shipping on orders over ₦75,000 | New user discount: 10% off</p>
         </div>
+        {% endif %}
         <nav class="main-nav">
-            <button class="sidebar-toggle sidebar-toggle-nav" id="sidebar-toggle" aria-label="Toggle sidebar">
-                <i class="fas fa-bars"></i>
-            </button>
             <a href="{{ url_for('home') }}" class="logo">Abils Mall</a>
-            <form class="nav-search" method="GET" action="{{ url_for('marketplace') }}">
-                <input type="search" name="q" placeholder="Search products..." value="{{ request.args.get('q', '') }}">
-                <button type="submit" aria-label="Search products"><i class="fas fa-search"></i></button>
-            </form>
+            {% if is_auth_page %}
+                <div class="auth-nav-links">
+                    <a href="{{ url_for('home') }}" class="auth-nav-link">Home</a>
+                    <button class="mode-toggle mode-icon" id="mode-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+                        <i id="mode-icon" class="fas fa-moon" aria-hidden="true"></i>
+                    </button>
+                    {% if request.endpoint == 'auth.login' %}
+                        <a href="{{ url_for('auth.register') }}" class="auth-nav-link">Register</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="auth-nav-link">Login</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <button class="sidebar-toggle sidebar-toggle-nav" id="sidebar-toggle" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <form class="nav-search" method="GET" action="{{ url_for('marketplace') }}">
+                    <input type="search" name="q" placeholder="Search products..." value="{{ request.args.get('q', '') }}">
+                    <button type="submit" aria-label="Search products"><i class="fas fa-search"></i></button>
+                </form>
             <div class="nav-icons">
                 <button class="mode-toggle mode-icon" id="mode-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
                     <i id="mode-icon" class="fas fa-moon" aria-hidden="true"></i>
@@ -45,6 +61,7 @@
                     <a href="{{ url_for('auth.login') }}" class="user-icon nav-login-link">Login</a>
                 {% endif %}
             </div>
+            {% endif %}
         </nav>
     </header>
 
@@ -60,75 +77,83 @@
                 {% endif %}
             {% endwith %}
         </div>
-        <div class="layout">
-            <aside class="sidebar" id="sidebar">
-                <div class="sidebar-title">Menu</div>
-                <details open class="sidebar-group">
-                    <summary><i class="fas fa-compass"></i> Explore</summary>
-                    <a href="{{ url_for('home') }}"><i class="fas fa-house"></i> Home</a>
-                    <a href="{{ url_for('about') }}"><i class="fas fa-circle-info"></i> About</a>
-                    <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact Us</a>
-                </details>
-                {% if current_user.is_authenticated %}
-                    <div class="sidebar-user">
-                        <a href="{{ url_for('auth.profile') }}" class="user-chip">
-                            {% if current_user.avatar_path %}
-                                <img class="user-avatar user-avatar-sm" src="{{ avatar_url(current_user) }}" alt="{{ current_user.username }} avatar">
-                            {% else %}
-                                <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ current_user.username }} avatar">
-                            {% endif %}
-                            <span class="user-name">{{ current_user.username }}</span>
-                        </a>
-                        <a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> Profile</a>
-                        <a href="{{ url_for('auth.change_password') }}"><i class="fas fa-key"></i> Change Password</a>
-                    </div>
-                    {% if current_user.role == 'admin' %}
-                        <details open class="sidebar-group">
-                            <summary><i class="fas fa-shield-alt"></i> Admin</summary>
-                            <a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
-                            <a href="{{ url_for('admin.users') }}"><i class="fas fa-users"></i> Users</a>
-                            <a href="{{ url_for('admin.manager_requests') }}"><i class="fas fa-user-check"></i> Manager Requests</a>
-                            <a href="{{ url_for('admin.orders') }}"><i class="fas fa-receipt"></i> Orders</a>
-                            <a href="{{ url_for('admin.bank_transfers') }}"><i class="fas fa-university"></i> Bank Transfers</a>
-                            <a href="{{ url_for('admin.payouts') }}"><i class="fas fa-wallet"></i> Payouts</a>
-                            <a href="{{ url_for('admin.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
-                            <a href="{{ url_for('admin.activities') }}"><i class="fas fa-clipboard-list"></i> Activities</a>
-                            <a href="{{ url_for('admin.analytics') }}"><i class="fas fa-chart-bar"></i> Analytics</a>
-                        </details>
-                    {% elif current_user.role == 'manager' %}
-                        <details open class="sidebar-group">
-                            <summary><i class="fas fa-briefcase"></i> Manager</summary>
-                            <a href="{{ url_for('manager.dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
-                            <a href="{{ url_for('manager.manage_products') }}"><i class="fas fa-boxes"></i> Manage Products</a>
-                            <a href="{{ url_for('manager.add_product') }}"><i class="fas fa-box"></i> Add Product</a>
-                            <a href="{{ url_for('manager.reports') }}"><i class="fas fa-file-alt"></i> Reports</a>
-                            <a href="{{ url_for('manager.daily_statement_pdf') }}"><i class="fas fa-file-pdf"></i> Statement PDF</a>
-                            <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
-                        </details>
+        {% if is_auth_page %}
+            <section class="content content-auth">
+        {% else %}
+            <div class="layout">
+                <aside class="sidebar" id="sidebar">
+                    <div class="sidebar-title">Menu</div>
+                    <details open class="sidebar-group">
+                        <summary><i class="fas fa-compass"></i> Explore</summary>
+                        <a href="{{ url_for('home') }}"><i class="fas fa-house"></i> Home</a>
+                        <a href="{{ url_for('about') }}"><i class="fas fa-circle-info"></i> About</a>
+                        <a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact Us</a>
+                    </details>
+                    {% if current_user.is_authenticated %}
+                        <div class="sidebar-user">
+                            <a href="{{ url_for('auth.profile') }}" class="user-chip">
+                                {% if current_user.avatar_path %}
+                                    <img class="user-avatar user-avatar-sm" src="{{ avatar_url(current_user) }}" alt="{{ current_user.username }} avatar">
+                                {% else %}
+                                    <img class="user-avatar user-avatar-sm" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ current_user.username }} avatar">
+                                {% endif %}
+                                <span class="user-name">{{ current_user.username }}</span>
+                            </a>
+                            <a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> Profile</a>
+                            <a href="{{ url_for('auth.change_password') }}"><i class="fas fa-key"></i> Change Password</a>
+                        </div>
+                        {% if current_user.role == 'admin' %}
+                            <details open class="sidebar-group">
+                                <summary><i class="fas fa-shield-alt"></i> Admin</summary>
+                                <a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+                                <a href="{{ url_for('admin.users') }}"><i class="fas fa-users"></i> Users</a>
+                                <a href="{{ url_for('admin.manager_requests') }}"><i class="fas fa-user-check"></i> Manager Requests</a>
+                                <a href="{{ url_for('admin.orders') }}"><i class="fas fa-receipt"></i> Orders</a>
+                                <a href="{{ url_for('admin.bank_transfers') }}"><i class="fas fa-university"></i> Bank Transfers</a>
+                                <a href="{{ url_for('admin.payouts') }}"><i class="fas fa-wallet"></i> Payouts</a>
+                                <a href="{{ url_for('admin.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+                                <a href="{{ url_for('admin.activities') }}"><i class="fas fa-clipboard-list"></i> Activities</a>
+                                <a href="{{ url_for('admin.analytics') }}"><i class="fas fa-chart-bar"></i> Analytics</a>
+                            </details>
+                        {% elif current_user.role == 'manager' %}
+                            <details open class="sidebar-group">
+                                <summary><i class="fas fa-briefcase"></i> Manager</summary>
+                                <a href="{{ url_for('manager.dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+                                <a href="{{ url_for('manager.manage_products') }}"><i class="fas fa-boxes"></i> Manage Products</a>
+                                <a href="{{ url_for('manager.add_product') }}"><i class="fas fa-box"></i> Add Product</a>
+                                <a href="{{ url_for('manager.reports') }}"><i class="fas fa-file-alt"></i> Reports</a>
+                                <a href="{{ url_for('manager.daily_statement_pdf') }}"><i class="fas fa-file-pdf"></i> Statement PDF</a>
+                                <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+                            </details>
+                        {% else %}
+                            <details open class="sidebar-group">
+                                <summary><i class="fas fa-shopping-bag"></i> Buyer</summary>
+                                <a href="{{ url_for('shop.products') }}"><i class="fas fa-store"></i> Shop</a>
+                                <a href="{{ url_for('shop.cart') }}"><i class="fas fa-shopping-cart"></i> Cart</a>
+                                <a href="{{ url_for('shop.orders') }}"><i class="fas fa-receipt"></i> Orders</a>
+                                <a href="{{ url_for('shop.wallet') }}"><i class="fas fa-wallet"></i> Wallet</a>
+                                <a href="{{ url_for('auth.manager_request_page') }}"><i class="fas fa-user-check"></i> Request Manager</a>
+                                <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+                            </details>
+                        {% endif %}
+                        <a class="sidebar-logout" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
                     {% else %}
                         <details open class="sidebar-group">
-                            <summary><i class="fas fa-shopping-bag"></i> Buyer</summary>
-                            <a href="{{ url_for('shop.products') }}"><i class="fas fa-store"></i> Shop</a>
-                            <a href="{{ url_for('shop.cart') }}"><i class="fas fa-shopping-cart"></i> Cart</a>
-                            <a href="{{ url_for('shop.orders') }}"><i class="fas fa-receipt"></i> Orders</a>
-                            <a href="{{ url_for('shop.wallet') }}"><i class="fas fa-wallet"></i> Wallet</a>
-                            <a href="{{ url_for('auth.manager_request_page') }}"><i class="fas fa-user-check"></i> Request Manager</a>
-                            <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+                            <summary><i class="fas fa-user-lock"></i> Account</summary>
+                            <a href="{{ url_for('auth.login') }}"><i class="fas fa-right-to-bracket"></i> Login</a>
+                            <a href="{{ url_for('auth.register') }}"><i class="fas fa-user-plus"></i> Register</a>
                         </details>
                     {% endif %}
-                    <a class="sidebar-logout" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                {% else %}
-                    <details open class="sidebar-group">
-                        <summary><i class="fas fa-user-lock"></i> Account</summary>
-                        <a href="{{ url_for('auth.login') }}"><i class="fas fa-right-to-bracket"></i> Login</a>
-                        <a href="{{ url_for('auth.register') }}"><i class="fas fa-user-plus"></i> Register</a>
-                    </details>
-                {% endif %}
-            </aside>
-            <section class="content">
-                {% block content %}{% endblock %}
+                </aside>
+                <section class="content">
+        {% endif %}
+                    {% block content %}{% endblock %}
+        {% if is_auth_page %}
             </section>
-        </div>
+        {% else %}
+                </section>
+            </div>
+        {% endif %}
     </main>
     <footer class="site-footer">
         <div class="container footer-wrap">

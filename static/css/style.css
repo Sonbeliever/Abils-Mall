@@ -3332,3 +3332,119 @@ a.btn,
         z-index: 1;
     }
 }
+
+/* ==============================
+   Landing Palette Nav Alignment
+   ============================== */
+:root {
+    --primary-color: #6a29eb;
+    --primary-hover: #4f1fc2;
+}
+
+.site-header {
+    background: linear-gradient(120deg, rgba(242, 28, 179, 0.94), rgba(105, 24, 242, 0.94) 55%, rgba(47, 31, 159, 0.95));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.top-bar {
+    background: transparent;
+    color: #f7f4ff;
+}
+
+.main-nav {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.logo {
+    color: #f7f4ff !important;
+}
+
+.nav-icons a,
+.nav-icons button,
+.nav-search button {
+    color: #f7f4ff;
+}
+
+.nav-search input[type="search"] {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.14);
+    color: #f7f4ff;
+}
+
+.nav-search input[type="search"]::placeholder {
+    color: rgba(247, 244, 255, 0.8);
+}
+
+.nav-search button {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.nav-search button:hover,
+.mode-toggle:hover,
+.nav-login-link:hover {
+    background: rgba(61, 243, 244, 0.22);
+}
+
+/* ==============================
+   Minimal Auth Navigation
+   ============================== */
+.auth-simple .top-bar {
+    display: none;
+}
+
+.auth-simple .main-content {
+    margin-top: 92px;
+}
+
+.auth-simple .main-nav {
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.auth-nav-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-nav-link {
+    text-decoration: none;
+    color: #f7f4ff;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.auth-nav-link:hover {
+    background: rgba(61, 243, 244, 0.2);
+}
+
+.auth-simple .mode-toggle {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.12);
+    color: #f7f4ff;
+}
+
+.auth-simple .content-auth {
+    width: min(100%, 1220px);
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .auth-simple .main-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .auth-nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
