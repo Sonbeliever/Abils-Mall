@@ -1,14 +1,14 @@
 :root {
-    --bg-a: #ff6a3d;
-    --bg-b: #ff8f1f;
-    --bg-c: #c74b2f;
-    --panel: rgba(255, 255, 255, 0.15);
-    --panel-soft: rgba(255, 255, 255, 0.1);
-    --stroke: rgba(255, 255, 255, 0.24);
-    --text: #fff8f1;
-    --text-soft: #ffe4cd;
-    --accent: #ffd36f;
-    --accent-2: #ffb55f;
+    --bg-a: #fff1e8;
+    --bg-b: #ffffff;
+    --bg-c: #f7e6dc;
+    --panel: rgba(255, 255, 255, 0.68);
+    --panel-soft: rgba(255, 255, 255, 0.5);
+    --stroke: rgba(255, 255, 255, 0.7);
+    --text: #3a2a22;
+    --text-soft: #6f5a4f;
+    --accent: #ff6a3d;
+    --accent-2: #ff8f1f;
 }
 
 * {
@@ -74,7 +74,7 @@ body {
     height: 420px;
     right: -120px;
     top: -80px;
-    background: radial-gradient(circle at 30% 30%, #fff6, #ffffff10 70%);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 180, 120, 0.18) 70%);
     animation: floatPulse 8s ease-in-out infinite;
 }
 
@@ -83,7 +83,7 @@ body {
     height: 460px;
     left: -180px;
     bottom: -140px;
-    background: radial-gradient(circle at 30% 30%, #fff5, #ffffff10 72%);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), rgba(255, 210, 170, 0.2) 72%);
     animation: floatPulse 10s ease-in-out infinite;
 }
 
@@ -92,7 +92,7 @@ body {
     height: 320px;
     left: 34%;
     top: 58%;
-    background: radial-gradient(circle at 40% 40%, #ffd36f66, #ffffff05 75%);
+    background: radial-gradient(circle at 40% 40%, rgba(255, 143, 31, 0.28), rgba(255, 255, 255, 0.05) 75%);
     animation: floatPulse 9s ease-in-out infinite;
 }
 
@@ -132,8 +132,8 @@ body {
     font-weight: 700;
     font-size: 14px;
     letter-spacing: 1px;
-    background: linear-gradient(135deg, #ffd36f, #ffb55f);
-    color: #4a220f;
+    background: linear-gradient(135deg, #ff8f1f, #ff6a3d);
+    color: #2b140a;
 }
 
 .brand-logo-wrap {
@@ -191,12 +191,12 @@ body {
 .ghost-btn {
     display: inline-block;
     text-decoration: none;
-    color: #5c2d10;
+    color: #4a220f;
     font-weight: 600;
     font-size: 13px;
     padding: 10px 14px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #ffd36f, #ffba62);
+    background: linear-gradient(135deg, #ff8f1f, #ff6a3d);
 }
 
 .glass-main {
@@ -259,8 +259,8 @@ body {
 .hero-tag {
     display: inline-flex;
     margin-bottom: 10px;
-    color: #4e2410;
-    background: linear-gradient(135deg, #ffd36f, #ffba62);
+    color: #4a220f;
+    background: linear-gradient(135deg, #ffb180, #ffd0a6);
     border-radius: 999px;
     padding: 8px 14px;
     font-size: 12px;
@@ -298,7 +298,7 @@ body {
 }
 
 .primary-btn {
-    color: #55270f;
+    color: #3a1a0b;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
 }
 

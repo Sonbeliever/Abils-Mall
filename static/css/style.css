@@ -3453,12 +3453,15 @@ a.btn,
    Marketplace + Card Polish
    ============================== */
 .top-bar {
-    background: linear-gradient(90deg, #ff7a2f, #ff9a3d);
-    color: #fffaf5;
+    background: linear-gradient(90deg, #f8f4ff, #ffffff);
+    color: #3a2a22;
 }
 
 .main-nav {
-    background: linear-gradient(120deg, rgba(255, 106, 61, 0.18), rgba(255, 143, 31, 0.18), rgba(255, 185, 92, 0.22));
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .market-simple .main-content {
@@ -3480,6 +3483,15 @@ a.btn,
     display: inline-flex;
     align-items: center;
     gap: 10px;
+}
+
+.market-simple .nav-search input[type="search"],
+.market-simple .nav-search button,
+.auth-simple .mode-toggle,
+.auth-nav-link {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.7);
+    color: #3a2a22;
 }
 
 .market-simple .layout {
