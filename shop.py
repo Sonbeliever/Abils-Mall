@@ -2,9 +2,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 import os
+from sqlalchemy import func
 
 from extensions import db
-from models import Product, CartItem, Order, OrderItem, CompanyActivity, DiscountCustomer, DiscountRequest, WalletTransaction, User
+from models import Product, ProductReview, CartItem, Order, OrderItem, CompanyActivity, DiscountCustomer, DiscountRequest, WalletTransaction, User
 from notifications import notify_user, send_email
 from activity import log_activity
 
@@ -274,6 +275,7 @@ def submit_review():
     product_id = request.form.get('product_id', '').strip()
     rating = request.form.get('rating', '').strip()
     review = request.form.get('review', '').strip()
+    next_url = request.form.get('next', '').strip()
 
     if not product_id.isdigit():
         flash('Invalid product.', 'danger')
@@ -290,6 +292,28 @@ def submit_review():
         flash('Product not found.', 'danger')
         return redirect(url_for('shop.products'))
 
+    existing_review = ProductReview.query.filter_by(
+        product_id=product.id,
+        user_id=current_user.id
+    ).first()
+    if existing_review:
+        existing_review.rating = int(rating)
+        existing_review.review_text = review
+    else:
+        db.session.add(ProductReview(
+            product_id=product.id,
+            user_id=current_user.id,
+            rating=int(rating),
+            review_text=review
+        ))
+
+    avg_rating, review_count = db.session.query(
+        func.avg(ProductReview.rating),
+        func.count(ProductReview.id)
+    ).filter(ProductReview.product_id == product.id).first()
+    product.rating_avg = round(float(avg_rating or 4.0), 1)
+    product.rating_count = int(review_count or 0)
+
     admins = User.query.filter_by(role='admin').all()
     subject = f"New Product Review: {product.name}"
     body = (
@@ -303,7 +327,10 @@ def submit_review():
     for admin in admins:
         send_email(admin.email, subject, body, enabled=True)
 
+    db.session.commit()
     flash('Review submitted. Thank you!', 'success')
+    if next_url.startswith('/'):
+        return redirect(next_url)
     return redirect(url_for('shop.products'))
 
 

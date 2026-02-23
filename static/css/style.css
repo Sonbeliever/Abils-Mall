@@ -3448,3 +3448,115 @@ a.btn,
         flex-wrap: wrap;
     }
 }
+
+/* ==============================
+   Marketplace + Card Polish
+   ============================== */
+.top-bar {
+    background: linear-gradient(90deg, #20dbe8, #5b8dff);
+    color: #f5f7ff;
+}
+
+.main-nav {
+    background: linear-gradient(120deg, rgba(242, 28, 179, 0.18), rgba(105, 24, 242, 0.18), rgba(47, 31, 159, 0.22));
+}
+
+.market-simple .main-content {
+    margin-top: 94px;
+}
+
+.market-simple .main-nav {
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.market-nav-search {
+    margin-left: auto;
+    margin-right: 0;
+    width: min(52vw, 460px);
+}
+
+.market-nav-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.market-simple .layout {
+    display: block;
+}
+
+.market-simple #sidebar {
+    display: none !important;
+}
+
+.market-simple .content {
+    width: 100%;
+}
+
+.product-info {
+    text-align: center;
+}
+
+.product-title {
+    height: auto;
+    min-height: 44px;
+}
+
+.product-rating,
+.product-price,
+.product-actions {
+    justify-content: center;
+}
+
+.product-snippet {
+    text-align: center;
+}
+
+.product-info form {
+    display: grid;
+    gap: 8px;
+}
+
+.review-card {
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(245, 241, 255, 0.95));
+}
+
+.review-head h3 {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.review-form .form-group label {
+    display: block;
+    text-align: center;
+}
+
+.review-form .form-group input,
+.review-form .form-group select,
+.review-form .form-group textarea {
+    text-align: center;
+}
+
+.review-form .btn {
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .market-simple .main-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .market-nav-search {
+        width: 100%;
+        min-width: 0;
+        order: 2;
+    }
+
+    .market-nav-links {
+        order: 1;
+        width: 100%;
+        justify-content: center;
+    }
+}

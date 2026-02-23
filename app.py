@@ -23,6 +23,8 @@ def _ensure_schema_columns():
         "product": [
             ("weight_grams", "ALTER TABLE product ADD COLUMN weight_grams INTEGER DEFAULT 0"),
             ("size_desc", "ALTER TABLE product ADD COLUMN size_desc VARCHAR(120)"),
+            ("rating_avg", "ALTER TABLE product ADD COLUMN rating_avg DOUBLE PRECISION DEFAULT 4.0"),
+            ("rating_count", "ALTER TABLE product ADD COLUMN rating_count INTEGER DEFAULT 0"),
         ],
         "order": [
             ("delivery_country", 'ALTER TABLE "order" ADD COLUMN delivery_country VARCHAR(120)'),

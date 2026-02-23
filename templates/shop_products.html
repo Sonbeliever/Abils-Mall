@@ -26,9 +26,19 @@
                 </a>
                 <div class="product-info">
                     <div class="product-title">{{ product.name }}</div>
+                    {% set avg_rating = product.rating_avg or 4.0 %}
+                    {% set total_ratings = product.rating_count or 0 %}
                     <div class="product-rating">
-                        <span class="stars empty">★★★★★</span>
-                        <span class="rating-count">(No ratings yet)</span>
+                        <span class="stars">
+                            {% for i in range(1, 6) %}
+                                {% if i <= avg_rating %}★{% else %}☆{% endif %}
+                            {% endfor %}
+                        </span>
+                        {% if total_ratings > 0 %}
+                            <span class="rating-count">({{ "%.1f"|format(avg_rating) }}/5 • {{ total_ratings }} review{% if total_ratings != 1 %}s{% endif %})</span>
+                        {% else %}
+                            <span class="rating-count">(4.0/5 starter rating)</span>
+                        {% endif %}
                     </div>
                     <div class="product-price">
                         <span class="current-price">₦{{ "{:,.0f}".format(product.sale_price or product.price) }}</span>
@@ -42,7 +52,7 @@
                         <button class="btn-add-cart" type="submit">Add to Cart</button>
                     </form>
                     <a class="btn-view-details inline-detail-btn" href="{{ url_for('shop.request_discount', company_id=product.company_id) }}">Request Discount</a>
-                    <button class="btn btn-primary review-btn" type="button" data-product-id="{{ product.id }}" data-product-name="{{ product.name|e }}">Write Review</button>
+                    <button class="btn btn-primary review-btn" type="button" data-product-id="{{ product.id }}" data-product-name="{{ product.name|e }}" data-review-next="{{ url_for('shop.products') }}">Write Review</button>
                 </div>
             </div>
         {% endfor %}
