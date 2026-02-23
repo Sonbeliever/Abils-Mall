@@ -36,7 +36,7 @@
                     <div class="product-title">{{ product.name }}</div>
                     {% set avg_rating = product.rating_avg or 4.0 %}
                     {% set total_ratings = product.rating_count or 0 %}
-                    <div class="product-rating">
+                    <div class="product-rating{% if total_ratings > 0 %} rated{% endif %}">
                         <span class="stars">
                             {% for i in range(1, 6) %}
                                 {% if i <= avg_rating %}★{% else %}☆{% endif %}
@@ -44,8 +44,6 @@
                         </span>
                         {% if total_ratings > 0 %}
                             <span class="rating-count">({{ "%.1f"|format(avg_rating) }}/5 • {{ total_ratings }} review{% if total_ratings != 1 %}s{% endif %})</span>
-                        {% else %}
-                            <span class="rating-count">(4.0/5 starter rating)</span>
                         {% endif %}
                     </div>
                     <div class="product-price">

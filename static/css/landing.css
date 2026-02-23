@@ -1,14 +1,14 @@
 :root {
-    --bg-a: #6918f2;
-    --bg-b: #f21cb3;
-    --bg-c: #2f1f9f;
+    --bg-a: #ff6a3d;
+    --bg-b: #ff8f1f;
+    --bg-c: #c74b2f;
     --panel: rgba(255, 255, 255, 0.15);
     --panel-soft: rgba(255, 255, 255, 0.1);
     --stroke: rgba(255, 255, 255, 0.24);
-    --text: #f7f4ff;
-    --text-soft: #d8d2ef;
-    --accent: #3df3f4;
-    --accent-2: #7ac5ff;
+    --text: #fff8f1;
+    --text-soft: #ffe4cd;
+    --accent: #ffd36f;
+    --accent-2: #ffb55f;
 }
 
 * {
@@ -92,7 +92,7 @@ body {
     height: 320px;
     left: 34%;
     top: 58%;
-    background: radial-gradient(circle at 40% 40%, #3df3f455, #ffffff05 75%);
+    background: radial-gradient(circle at 40% 40%, #ffd36f66, #ffffff05 75%);
     animation: floatPulse 9s ease-in-out infinite;
 }
 
@@ -132,8 +132,8 @@ body {
     font-weight: 700;
     font-size: 14px;
     letter-spacing: 1px;
-    background: linear-gradient(135deg, #41ecff, #8db6ff);
-    color: #1a1347;
+    background: linear-gradient(135deg, #ffd36f, #ffb55f);
+    color: #4a220f;
 }
 
 .brand-logo-wrap {
@@ -191,12 +191,12 @@ body {
 .ghost-btn {
     display: inline-block;
     text-decoration: none;
-    color: #0f2f55;
+    color: #5c2d10;
     font-weight: 600;
     font-size: 13px;
     padding: 10px 14px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #7deef9, #b8d0ff);
+    background: linear-gradient(135deg, #ffd36f, #ffba62);
 }
 
 .glass-main {
@@ -259,8 +259,8 @@ body {
 .hero-tag {
     display: inline-flex;
     margin-bottom: 10px;
-    color: #0d3858;
-    background: linear-gradient(135deg, #6cf3fc, #9ec3ff);
+    color: #4e2410;
+    background: linear-gradient(135deg, #ffd36f, #ffba62);
     border-radius: 999px;
     padding: 8px 14px;
     font-size: 12px;
@@ -298,7 +298,7 @@ body {
 }
 
 .primary-btn {
-    color: #15254a;
+    color: #55270f;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
 }
 

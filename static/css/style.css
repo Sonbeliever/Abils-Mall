@@ -3453,12 +3453,12 @@ a.btn,
    Marketplace + Card Polish
    ============================== */
 .top-bar {
-    background: linear-gradient(90deg, #20dbe8, #5b8dff);
-    color: #f5f7ff;
+    background: linear-gradient(90deg, #ff7a2f, #ff9a3d);
+    color: #fffaf5;
 }
 
 .main-nav {
-    background: linear-gradient(120deg, rgba(242, 28, 179, 0.18), rgba(105, 24, 242, 0.18), rgba(47, 31, 159, 0.22));
+    background: linear-gradient(120deg, rgba(255, 106, 61, 0.18), rgba(255, 143, 31, 0.18), rgba(255, 185, 92, 0.22));
 }
 
 .market-simple .main-content {
@@ -3507,6 +3507,19 @@ a.btn,
 .product-price,
 .product-actions {
     justify-content: center;
+}
+
+.product-price {
+    gap: 8px;
+}
+
+.product-price .current-price {
+    font-size: 1.02rem;
+    line-height: 1.2;
+}
+
+.product-price .original-price {
+    font-size: 0.86rem;
 }
 
 .product-snippet {
@@ -3559,4 +3572,41 @@ a.btn,
         width: 100%;
         justify-content: center;
     }
+
+    .product-rating {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .product-rating .stars {
+        white-space: nowrap;
+        letter-spacing: 0.4px;
+        font-size: 13px;
+    }
+
+.product-rating .rating-count {
+    font-size: 12px;
+    margin-left: 0;
+    white-space: nowrap;
+}
+
+    .product-price .current-price {
+        font-size: 0.95rem;
+    }
+
+    .product-price .original-price {
+        font-size: 0.78rem;
+    }
+}
+
+.product-rating .stars {
+    color: #c7c7c7;
+}
+
+.product-rating.rated .stars {
+    color: #ff9f1c;
 }
