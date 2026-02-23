@@ -127,6 +127,10 @@ def create_app():
 
     @app.route('/')
     def home():
+        return render_template('landing.html')
+
+    @app.route('/marketplace')
+    def marketplace():
         from models import Product
         query = request.args.get('q', '').strip()
         products_query = Product.query
