@@ -395,6 +395,49 @@ body {
     color: var(--text-soft);
 }
 
+.team-section {
+    margin-top: 16px;
+    display: grid;
+    gap: 16px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.team-card {
+    padding: 16px 14px;
+    text-align: center;
+}
+
+.team-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    margin: 0 auto 10px;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: #3a1a0b;
+    background: linear-gradient(135deg, #ffb180, #ffd0a6);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.team-card h5 {
+    margin: 0 0 6px;
+    font-size: 14px;
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+}
+
+.team-card p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
 @media (max-width: 980px) {
     .landing-shell {
         padding: 18px;
@@ -417,6 +460,10 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .team-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .top-nav {
         justify-content: flex-start;
     }
@@ -430,5 +477,9 @@ body {
 
     .brand-logo {
         width: 108px;
+    }
+
+    .team-card {
+        padding: 14px 12px;
     }
 }
