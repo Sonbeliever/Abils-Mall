@@ -426,6 +426,17 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
+.team-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    margin: 0 auto 10px;
+    display: block;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 18px rgba(83, 34, 12, 0.18);
+}
+
 .team-card h5 {
     margin: 0 0 6px;
     font-size: 14px;
