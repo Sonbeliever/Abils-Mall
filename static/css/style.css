@@ -3720,18 +3720,18 @@ body.dark-mode .nav-search button {
     display: grid;
     grid-template-columns: 260px 1fr;
     gap: 14px;
-    background: linear-gradient(135deg, #ca1fa8, #8423d7 58%, #5c1ead);
+    background: linear-gradient(135deg, #ff7a2f, #ff8f1f 58%, #d35f23);
     border-radius: 20px;
     padding: 14px;
-    color: #f8f4ff;
+    color: #fffaf5;
 }
 
 .buyer-profile-glass,
 .buyer-stat-card,
 .buyer-progress-card,
 .buyer-panel-card {
-    background: rgba(255, 255, 255, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 16px;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -3757,7 +3757,7 @@ body.dark-mode .nav-search button {
 
 .buyer-profile-glass p {
     margin: 0 0 10px;
-    color: rgba(248, 244, 255, 0.9);
+    color: rgba(255, 250, 245, 0.9);
     font-size: 12px;
 }
 
@@ -3769,8 +3769,8 @@ body.dark-mode .nav-search button {
 
 .buyer-nav a {
     text-decoration: none;
-    color: #f8f4ff;
-    background: rgba(255, 255, 255, 0.12);
+    color: #fffaf5;
+    background: rgba(255, 255, 255, 0.16);
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 10px;
     padding: 8px 10px;
@@ -3801,7 +3801,7 @@ body.dark-mode .nav-search button {
 
 .buyer-stat-card span {
     font-size: 12px;
-    color: rgba(248, 244, 255, 0.85);
+    color: rgba(255, 250, 245, 0.85);
 }
 
 .buyer-stat-card strong {
@@ -3843,7 +3843,7 @@ body.dark-mode .nav-search button {
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, #ff9d47, #ffd06a);
+    background: linear-gradient(90deg, #ffd188, #ffe3b6);
 }
 
 .buyer-grid-2 {
@@ -3879,7 +3879,55 @@ body.dark-mode .nav-search button {
 }
 
 .buyer-list li span {
-    color: rgba(248, 244, 255, 0.9);
+    color: rgba(255, 250, 245, 0.92);
+}
+
+/* Keep nav style fixed even when dark mode is enabled */
+body.dark-mode .site-header {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.82));
+    border-bottom: 1px solid rgba(255, 143, 31, 0.18);
+}
+
+body.dark-mode .top-bar {
+    background: linear-gradient(90deg, #fff6f1, #ffffff);
+    color: #3a2a22;
+    border-bottom: 1px solid rgba(255, 143, 31, 0.18);
+}
+
+body.dark-mode .main-nav {
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 0 12px 30px rgba(255, 106, 61, 0.12);
+}
+
+body.dark-mode .logo,
+body.dark-mode .nav-icons a,
+body.dark-mode .nav-icons button {
+    color: #2b1a12 !important;
+}
+
+body.dark-mode .nav-search input[type="search"] {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 143, 31, 0.22);
+    color: #2b1a12;
+}
+
+body.dark-mode .nav-search input[type="search"]::placeholder {
+    color: #6a5244;
+}
+
+body.dark-mode .nav-search button {
+    background: linear-gradient(135deg, #ffb180, #ff8f1f);
+    border-color: rgba(255, 143, 31, 0.35);
+    color: #2b1a12;
+}
+
+body.dark-mode .mode-toggle:hover,
+body.dark-mode .nav-login-link:hover,
+body.dark-mode .auth-nav-link:hover,
+body.dark-mode .nav-search button:hover {
+    background: linear-gradient(135deg, #ff9a3d, #ff6a3d);
+    color: #ffffff !important;
 }
 
 @media (max-width: 992px) {
