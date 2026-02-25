@@ -4036,6 +4036,219 @@ body.dark-mode .nav-search button {
     color: #2a344f;
 }
 
+/* ==============================
+   Admin + Manager White Glass Upgrade
+   ============================== */
+.admin-dashboard,
+.manager-dashboard {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 8px 0 12px;
+}
+
+.dashboard-shell {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 14px;
+}
+
+.dashboard-sidebar-glass {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.58));
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(127, 152, 236, 0.1);
+    padding: 16px 14px;
+}
+
+.dashboard-sidebar-glass h2 {
+    margin: 0 0 6px;
+}
+
+.dashboard-sidebar-glass p {
+    margin: 0 0 12px;
+    color: #5a6788;
+    font-size: 13px;
+}
+
+.dashboard-main-glass {
+    display: grid;
+    gap: 12px;
+}
+
+.dashboard-quick-links {
+    display: grid;
+    gap: 8px;
+}
+
+.dashboard-quick-links a,
+.dashboard-quick-links .dashboard-inline-btn {
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 8px 10px;
+    border: 1px solid rgba(198, 213, 255, 0.72);
+    background: rgba(255, 255, 255, 0.86);
+    color: #273763;
+    text-align: left;
+    font-size: 13px;
+}
+
+.dashboard-quick-links a i,
+.dashboard-quick-links .dashboard-inline-btn i {
+    margin-right: 8px;
+}
+
+.dashboard-quick-links .dashboard-inline-btn {
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.dashboard-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.admin-dashboard .dashboard-head h1,
+.manager-dashboard .page-header h1 {
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    letter-spacing: 0.2px;
+}
+
+.manager-dashboard .page-subtitle {
+    color: #5b6788;
+}
+
+.admin-dashboard .admin-panel,
+.manager-dashboard .admin-panel,
+.manager-dashboard .manager-panel {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.58));
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(127, 152, 236, 0.12);
+}
+
+.admin-dashboard .stats-grid,
+.manager-dashboard .stats-grid {
+    gap: 12px;
+}
+
+.admin-dashboard .stat-card,
+.manager-dashboard .stat-card {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(213, 224, 255, 0.6);
+    border-radius: 14px;
+    box-shadow: none;
+}
+
+.admin-dashboard .stat-card h4,
+.manager-dashboard .stat-card h4 {
+    color: #5a6687;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.admin-dashboard .stat-card p,
+.manager-dashboard .stat-card p {
+    color: #22325a;
+    font-size: clamp(1.15rem, 1.8vw, 1.6rem);
+}
+
+.admin-dashboard .admin-actions,
+.manager-dashboard .manager-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.admin-dashboard .admin-actions .btn,
+.manager-dashboard .manager-actions .btn {
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(199, 213, 255, 0.72);
+    color: #273763;
+    box-shadow: none;
+}
+
+.admin-dashboard .admin-actions .btn:hover,
+.manager-dashboard .manager-actions .btn:hover {
+    background: linear-gradient(135deg, #e4ecff, #c9d7ff);
+    color: #1f2f59;
+}
+
+.admin-dashboard .admin-table-wrapper,
+.manager-dashboard .admin-table-wrapper {
+    border-radius: 14px;
+    border: 1px solid rgba(209, 221, 255, 0.65);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.admin-dashboard .admin-table th,
+.manager-dashboard .admin-table th {
+    background: rgba(223, 233, 255, 0.75);
+    color: #22325a;
+    font-weight: 700;
+}
+
+.admin-dashboard .admin-table td,
+.manager-dashboard .admin-table td {
+    color: #3e4f75;
+}
+
+.admin-dashboard .admin-activity-item,
+.manager-dashboard .panel-hint,
+.manager-dashboard .panel-help-text {
+    color: #5a6788;
+}
+
+.manager-dashboard #pickup-map {
+    border-radius: 12px;
+    border: 1px solid rgba(203, 216, 255, 0.75);
+}
+
+body.dark-mode .admin-dashboard .admin-panel,
+body.dark-mode .manager-dashboard .admin-panel,
+body.dark-mode .manager-dashboard .manager-panel,
+body.dark-mode .admin-dashboard .stat-card,
+body.dark-mode .manager-dashboard .stat-card,
+body.dark-mode .admin-dashboard .admin-table-wrapper,
+body.dark-mode .manager-dashboard .admin-table-wrapper {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.58));
+    border-color: rgba(255, 255, 255, 0.78);
+    color: #23325a;
+}
+
+body.dark-mode .admin-dashboard .admin-table th,
+body.dark-mode .manager-dashboard .admin-table th {
+    background: rgba(223, 233, 255, 0.75);
+    color: #22325a;
+}
+
+body.dark-mode .dashboard-sidebar-glass,
+body.dark-mode .dashboard-quick-links a,
+body.dark-mode .dashboard-quick-links .dashboard-inline-btn {
+    background: rgba(255, 255, 255, 0.82);
+    color: #273763;
+    border-color: rgba(198, 213, 255, 0.72);
+}
+
+@media (max-width: 768px) {
+    .dashboard-shell,
+    .dashboard-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard .admin-actions,
+    .manager-dashboard .manager-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard .stat-card p,
+    .manager-dashboard .stat-card p {
+        font-size: 1.2rem;
+    }
+}
+
 @media (max-width: 992px) {
     .buyer-dashboard-shell {
         grid-template-columns: 1fr;

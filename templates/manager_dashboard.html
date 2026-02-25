@@ -1,37 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container manager-dashboard">
-    <div class="page-header">
-        <div>
-            <h1>Manager Dashboard</h1>
-            <p class="page-subtitle">Overview of operations, payouts, and delivery setup.</p>
+<div class="container manager-dashboard dashboard-shell">
+    <aside class="dashboard-sidebar-glass">
+        <h2>Manager Panel</h2>
+        <p>Product operations, reports, pickup setup, and payout control.</p>
+        <div class="dashboard-quick-links">
+            <a href="{{ url_for('manager.add_product') }}"><i class="fas fa-plus"></i> Add Product</a>
+            <a href="{{ url_for('manager.manage_products') }}"><i class="fas fa-boxes-stacked"></i> Manage Products</a>
+            <a href="{{ url_for('manager.reports') }}"><i class="fas fa-chart-column"></i> Daily Reports</a>
+            <a href="{{ url_for('manager.daily_statement_pdf') }}"><i class="fas fa-file-pdf"></i> Statement PDF</a>
+            <button class="btn btn-primary dashboard-inline-btn" type="button" id="pickup-toggle"><i class="fas fa-location-dot"></i> Pickup Location</button>
         </div>
-    </div>
+    </aside>
 
-    <div class="stats-grid manager-stats">
-        <div class="stat-card">
-            <h4>Company Balance</h4>
-            <p>₦{{ "{:,.0f}".format(company.wallet_balance if company else 0) }}</p>
+    <section class="dashboard-main-glass">
+        <div class="page-header">
+            <div>
+                <h1>Manager Dashboard</h1>
+                <p class="page-subtitle">Overview of operations, payouts, and delivery setup.</p>
+            </div>
         </div>
-        <div class="stat-card">
-            <h4>Total Products</h4>
-            <p>{{ products|length }}</p>
-        </div>
-        <div class="stat-card">
-            <h4>Total Orders</h4>
-            <p>{{ orders|length }}</p>
-        </div>
-    </div>
 
-    <div class="admin-actions manager-actions">
-        <a class="btn btn-primary" href="{{ url_for('manager.add_product') }}">Add Product</a>
-        <a class="btn btn-primary" href="{{ url_for('manager.manage_products') }}">Manage Products</a>
-        <a class="btn btn-primary" href="{{ url_for('manager.reports') }}">Daily Reports</a>
-        <a class="btn btn-primary" href="{{ url_for('manager.daily_statement_pdf') }}">Daily Statement (PDF)</a>
-        <button class="btn btn-primary" type="button" id="pickup-toggle">Pickup Location</button>
-    </div>
+        <div class="stats-grid manager-stats">
+            <div class="stat-card">
+                <h4>Company Balance</h4>
+                <p>₦{{ "{:,.0f}".format(company.wallet_balance if company else 0) }}</p>
+            </div>
+            <div class="stat-card">
+                <h4>Total Products</h4>
+                <p>{{ products|length }}</p>
+            </div>
+            <div class="stat-card">
+                <h4>Total Orders</h4>
+                <p>{{ orders|length }}</p>
+            </div>
+        </div>
 
-    <div class="admin-panel activity-panel manager-panel" id="pickup-panel">
+        <div class="admin-panel activity-panel manager-panel" id="pickup-panel">
         <div class="panel-header">
             <h3>Pickup Location</h3>
             <span class="panel-hint">Set your company pickup point for distance calculations.</span>
@@ -83,49 +88,49 @@
             </div>
             <button class="checkout-btn" type="submit">Save Pickup Location</button>
         </form>
-    </div>
-
-    <div class="admin-panel manager-panel">
-        <div class="panel-header">
-            <h3>Discount Requests</h3>
-            <span class="panel-hint">Approve special rates for loyal buyers.</span>
         </div>
-        <div class="admin-table-wrapper">
-        <table class="admin-table">
-            <tr>
-                <th>Buyer ID</th>
-                <th>Action</th>
-            </tr>
-            {% for req in discount_requests %}
-            <tr>
-                <td>{{ buyer_map.get(req.buyer_id, req.buyer_id) }}</td>
-                <td>
-                    <form method="POST" action="{{ url_for('manager.approve_discount', request_id=req.id) }}" class="table-inline-form">
-                        <input type="number" name="discount_rate" value="10" min="0" max="90" class="rate-input">
-                        <button class="btn btn-success" type="submit">Approve</button>
-                    </form>
-                    <a class="btn btn-danger" href="{{ url_for('manager.reject_discount', request_id=req.id) }}">Reject</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        </div>
-    </div>
 
-
-    <div class="manager-grid">
-        <div class="admin-panel manager-panel">
-            <div class="panel-header">
-                <h3>Request Payout</h3>
-                <span class="panel-hint">Withdraw funds to your preferred account.</span>
-            </div>
-            <form method="POST" action="{{ url_for('manager.request_payout') }}" class="checkout-form full-form">
-                <div class="form-group">
-                    <label>Amount</label>
-                    <input type="number" name="amount" min="1" required>
+        <div class="dashboard-grid-2">
+            <div class="admin-panel manager-panel">
+                <div class="panel-header">
+                    <h3>Discount Requests</h3>
+                    <span class="panel-hint">Approve special rates for loyal buyers.</span>
                 </div>
-                <button class="checkout-btn" type="submit">Submit Payout Request</button>
-            </form>
+                <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <tr>
+                        <th>Buyer ID</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for req in discount_requests %}
+                    <tr>
+                        <td>{{ buyer_map.get(req.buyer_id, req.buyer_id) }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('manager.approve_discount', request_id=req.id) }}" class="table-inline-form">
+                                <input type="number" name="discount_rate" value="10" min="0" max="90" class="rate-input">
+                                <button class="btn btn-success" type="submit">Approve</button>
+                            </form>
+                            <a class="btn btn-danger" href="{{ url_for('manager.reject_discount', request_id=req.id) }}">Reject</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+            </div>
+
+            <div class="admin-panel manager-panel">
+                <div class="panel-header">
+                    <h3>Request Payout</h3>
+                    <span class="panel-hint">Withdraw funds to your preferred account.</span>
+                </div>
+                <form method="POST" action="{{ url_for('manager.request_payout') }}" class="checkout-form full-form">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" name="amount" min="1" required>
+                    </div>
+                    <button class="checkout-btn" type="submit">Submit Payout Request</button>
+                </form>
+            </div>
         </div>
 
         <div class="admin-panel manager-panel">
@@ -141,7 +146,7 @@
                 <button class="checkout-btn" type="submit">Check Status</button>
             </form>
         </div>
-    </div>
+    </section>
 </div>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

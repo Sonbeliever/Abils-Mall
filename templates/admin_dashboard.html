@@ -1,90 +1,93 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container admin-dashboard">
-    <div class="dashboard-head">
-        <h1>Admin Dashboard</h1>
-    </div>
-    <div class="admin-grid">
-        <section class="admin-panel">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Total Sales</h4>
-                    <p>₦{{ "{:,.0f}".format(total_sales) }}</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Total Payments</h4>
-                    <p>₦{{ "{:,.0f}".format(total_payments) }}</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Total Company Balance</h4>
-                    <p>₦{{ "{:,.0f}".format(total_company_balance) }}</p>
-                </div>
+<div class="container admin-dashboard dashboard-shell">
+    <aside class="dashboard-sidebar-glass">
+        <h2>Admin Panel</h2>
+        <p>Central control for operations, users, finance, and reporting.</p>
+        <div class="dashboard-quick-links">
+            <a href="{{ url_for('admin.create_company') }}"><i class="fas fa-building"></i> Create Company</a>
+            <a href="{{ url_for('admin.create_manager') }}"><i class="fas fa-user-plus"></i> Create Manager</a>
+            <a href="{{ url_for('admin.users') }}"><i class="fas fa-users"></i> View Users</a>
+            <a href="{{ url_for('admin.orders') }}"><i class="fas fa-receipt"></i> View Orders</a>
+            <a href="{{ url_for('admin.bank_transfers') }}"><i class="fas fa-building-columns"></i> Bank Transfers</a>
+            <a href="{{ url_for('admin.analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="{{ url_for('admin.admin_email_change_page') }}"><i class="fas fa-envelope"></i> Change Email</a>
+            <a href="{{ url_for('admin.daily_statement_pdf') }}"><i class="fas fa-file-pdf"></i> Statement PDF</a>
+        </div>
+    </aside>
+
+    <section class="dashboard-main-glass">
+        <div class="dashboard-head">
+            <h1>Admin Dashboard</h1>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Total Sales</h4>
+                <p>₦{{ "{:,.0f}".format(total_sales) }}</p>
             </div>
-
-            <div class="admin-actions">
-                <a class="btn btn-primary" href="{{ url_for('admin.create_company') }}">Create Company</a>
-                <a class="btn btn-primary" href="{{ url_for('admin.create_manager') }}">Create Manager</a>
-                <a class="btn btn-primary" href="{{ url_for('admin.users') }}">View Users</a>
-                <a class="btn btn-primary" href="{{ url_for('admin.orders') }}">View Orders</a>
-                <a class="btn btn-primary" href="{{ url_for('admin.bank_transfers') }}">Bank Transfers</a>
-                <a class="btn btn-primary" href="{{ url_for('admin.activities') }}">Activities</a>
-                <a class="btn btn-primary" href="{{ url_for('admin.analytics') }}">Analytics</a>
-                <a class="btn btn-primary" href="{{ url_for('admin.admin_email_change_page') }}">Change Admin Email</a>
-                <a class="btn btn-primary" href="{{ url_for('admin.daily_statement_pdf') }}">Daily Statement (PDF)</a>
+            <div class="stat-card">
+                <h4>Total Payments</h4>
+                <p>₦{{ "{:,.0f}".format(total_payments) }}</p>
             </div>
-
-            <h3 class="section-title">Company Balances</h3>
-            <div class="admin-table-wrapper">
-            <table class="admin-table">
-                <tr>
-                    <th>Company</th>
-                    <th>Balance</th>
-                    <th>Withdraw</th>
-                </tr>
-                {% for company in companies %}
-                <tr>
-                    <td>{{ company.name }}</td>
-                    <td>₦{{ "{:,.0f}".format(company.wallet_balance) }}</td>
-                    <td>
-                        <form method="POST" action="{{ url_for('admin.withdraw_company', company_id=company.id) }}" class="table-inline-form">
-                            <input type="number" name="amount" min="1" placeholder="Amount" class="compact-input">
-                            <button class="btn btn-danger" type="submit">Withdraw</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
+            <div class="stat-card">
+                <h4>Total Company Balance</h4>
+                <p>₦{{ "{:,.0f}".format(total_company_balance) }}</p>
             </div>
-        </section>
+        </div>
 
-        <aside class="admin-panel">
-            <div class="activity-header">
-                <h3>Recent Activities</h3>
-            </div>
-
-            <form id="mark-seen-form" method="POST" action="{{ url_for('admin.mark_activities_seen') }}"></form>
-
-            <div class="activity-panel" id="activity-panel">
-                <form method="GET" class="activity-search-form">
-                    <input type="number" name="company_id" min="1" placeholder="Search by Company ID" value="{{ company_id_filter }}" class="compact-input">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                    {% if company_id_filter %}
-                        <a class="btn btn-danger" href="{{ url_for('admin.dashboard') }}">Clear</a>
-                    {% endif %}
-                </form>
-                <ul class="admin-activity-list">
-                    {% for activity in activities %}
-                        <li class="admin-activity-item">
-                            <strong>{{ activity.created_at.strftime('%Y-%m-%d') }}</strong><br>
-                            {{ activity.description }}
-                        </li>
+        <div class="dashboard-grid-2">
+            <article class="admin-panel">
+                <h3 class="section-title">Company Balances</h3>
+                <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <tr>
+                        <th>Company</th>
+                        <th>Balance</th>
+                        <th>Withdraw</th>
+                    </tr>
+                    {% for company in companies %}
+                    <tr>
+                        <td>{{ company.name }}</td>
+                        <td>₦{{ "{:,.0f}".format(company.wallet_balance) }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.withdraw_company', company_id=company.id) }}" class="table-inline-form">
+                                <input type="number" name="amount" min="1" placeholder="Amount" class="compact-input">
+                                <button class="btn btn-danger" type="submit">Withdraw</button>
+                            </form>
+                        </td>
+                    </tr>
                     {% endfor %}
-                    {% if activities|length == 0 %}
-                        <li class="admin-activity-item">No activities found.</li>
-                    {% endif %}
-                </ul>
-            </div>
-        </aside>
+                </table>
+                </div>
+            </article>
+
+            <article class="admin-panel">
+                <div class="activity-header">
+                    <h3>Recent Activities</h3>
+                </div>
+                <form id="mark-seen-form" method="POST" action="{{ url_for('admin.mark_activities_seen') }}"></form>
+                <div class="activity-panel" id="activity-panel">
+                    <form method="GET" class="activity-search-form">
+                        <input type="number" name="company_id" min="1" placeholder="Search by Company ID" value="{{ company_id_filter }}" class="compact-input">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                        {% if company_id_filter %}
+                            <a class="btn btn-danger" href="{{ url_for('admin.dashboard') }}">Clear</a>
+                        {% endif %}
+                    </form>
+                    <ul class="admin-activity-list">
+                        {% for activity in activities %}
+                            <li class="admin-activity-item">
+                                <strong>{{ activity.created_at.strftime('%Y-%m-%d') }}</strong><br>
+                                {{ activity.description }}
+                            </li>
+                        {% endfor %}
+                        {% if activities|length == 0 %}
+                            <li class="admin-activity-item">No activities found.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </article>
+        </div>
     </div>
 </div>
 {% endblock %}
