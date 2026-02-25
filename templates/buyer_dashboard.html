@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="buyer-dashboard-shell">
+    <section class="buyer-profile-glass">
+        {% if current_user.avatar_path %}
+            <img class="buyer-dp" src="{{ avatar_url(current_user) }}" alt="{{ current_user.username }} avatar">
+        {% else %}
+            <img class="buyer-dp" src="{{ url_for('static', filename='images/default_avatar.svg') }}" alt="{{ current_user.username }} avatar">
+        {% endif %}
+        <h2>{{ current_user.username }}</h2>
+        <p>{{ current_user.email }}</p>
+        <div class="buyer-nav">
+            <a href="{{ url_for('shop.dashboard') }}"><i class="fas fa-chart-line"></i> Overview</a>
+            <a href="{{ url_for('shop.orders') }}"><i class="fas fa-receipt"></i> Orders</a>
+            <a href="{{ url_for('shop.wallet') }}"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="{{ url_for('shop.products') }}"><i class="fas fa-store"></i> Shop</a>
+            <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+            <a href="{{ url_for('auth.manager_request_page') }}"><i class="fas fa-user-check"></i> Manager Request</a>
+        </div>
+    </section>
+
+    <section class="buyer-dashboard-main">
+        <div class="buyer-stat-grid">
+            <article class="buyer-stat-card">
+                <span>Total Orders</span>
+                <strong>{{ total_orders }}</strong>
+            </article>
+            <article class="buyer-stat-card">
+                <span>Pending Orders</span>
+                <strong>{{ pending_orders }}</strong>
+            </article>
+            <article class="buyer-stat-card">
+                <span>Wallet Balance</span>
+                <strong>₦{{ "{:,.0f}".format(current_user.wallet_balance) }}</strong>
+            </article>
+            <article class="buyer-stat-card">
+                <span>Total Spent</span>
+                <strong>₦{{ "{:,.0f}".format(total_spent) }}</strong>
+            </article>
+        </div>
+
+        <div class="buyer-progress-card">
+            <h3>Activity Snapshot</h3>
+            <div class="buyer-progress-row">
+                <span>Cart Items</span>
+                <div class="buyer-progress-track"><i style="width: {{ 100 if cart_count > 12 else (cart_count * 8) }}%"></i></div>
+                <em>{{ cart_count }}</em>
+            </div>
+            <div class="buyer-progress-row">
+                <span>Referral Tokens</span>
+                <div class="buyer-progress-track"><i style="width: {{ 100 if referral_tokens > 20 else (referral_tokens * 5) }}%"></i></div>
+                <em>{{ referral_tokens }}</em>
+            </div>
+            <div class="buyer-progress-row">
+                <span>Order Completion</span>
+                {% set completed_orders = total_orders - pending_orders %}
+                {% set completion_percent = (completed_orders * 100 // total_orders) if total_orders > 0 else 0 %}
+                <div class="buyer-progress-track"><i style="width: {{ completion_percent }}%"></i></div>
+                <em>{{ completion_percent }}%</em>
+            </div>
+        </div>
+
+        <div class="buyer-grid-2">
+            <article class="buyer-panel-card">
+                <h3>Recent Orders</h3>
+                <ul class="buyer-list">
+                    {% for order in recent_orders %}
+                        <li>
+                            <span>#{{ order.id }} - {{ order.created_at.strftime('%d %b %Y') }}</span>
+                            <strong>₦{{ "{:,.0f}".format(order.total_amount) }}</strong>
+                        </li>
+                    {% else %}
+                        <li><span>No orders yet.</span><strong>-</strong></li>
+                    {% endfor %}
+                </ul>
+            </article>
+
+            <article class="buyer-panel-card">
+                <h3>Recent Activities</h3>
+                <ul class="buyer-list">
+                    {% for activity in recent_activities %}
+                        <li>
+                            <span>{{ activity.action.replace('_', ' ').title() }}</span>
+                            <strong>{{ activity.created_at.strftime('%d %b') }}</strong>
+                        </li>
+                    {% else %}
+                        <li><span>No activity yet.</span><strong>-</strong></li>
+                    {% endfor %}
+                </ul>
+            </article>
+        </div>
+
+        <article class="buyer-panel-card full">
+            <h3>Manager Request Status</h3>
+            {% if manager_request %}
+                <p>
+                    Company: <strong>{{ manager_request.company_name }}</strong> |
+                    Status: <strong>{{ manager_request.status|title }}</strong>
+                    {% if manager_request.commission_rate is not none %}
+                        | Commission: <strong>{{ manager_request.commission_rate }}%</strong>
+                    {% endif %}
+                </p>
+            {% else %}
+                <p>No request submitted yet. Use Request Manager to apply.</p>
+            {% endif %}
+        </article>
+    </section>
+</div>
+{% endblock %}

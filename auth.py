@@ -184,7 +184,7 @@ def login():
         elif user.role == 'manager':
             return redirect(url_for('manager.dashboard'))
         else:
-            return redirect(url_for('shop.products'))
+            return redirect(url_for('shop.dashboard'))
 
     return render_template('login.html')
 

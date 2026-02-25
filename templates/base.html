@@ -141,6 +141,7 @@
                         {% else %}
                             <details open class="sidebar-group">
                                 <summary><i class="fas fa-shopping-bag"></i> Buyer</summary>
+                                <a href="{{ url_for('shop.dashboard') }}"><i class="fas fa-gauge-high"></i> Dashboard</a>
                                 <a href="{{ url_for('shop.products') }}"><i class="fas fa-store"></i> Shop</a>
                                 <a href="{{ url_for('shop.cart') }}"><i class="fas fa-shopping-cart"></i> Cart</a>
                                 <a href="{{ url_for('shop.orders') }}"><i class="fas fa-receipt"></i> Orders</a>
@@ -161,7 +162,7 @@
                 <section class="content">
         {% endif %}
                     {% block content %}{% endblock %}
-        {% if is_auth_page %}
+        {% if is_simple_page %}
             </section>
         {% else %}
                 </section>

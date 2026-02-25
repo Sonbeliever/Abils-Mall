@@ -5,11 +5,48 @@ import os
 from sqlalchemy import func
 
 from extensions import db
-from models import Product, ProductReview, CartItem, Order, OrderItem, CompanyActivity, DiscountCustomer, DiscountRequest, WalletTransaction, User
+from models import Product, ProductReview, CartItem, Order, OrderItem, CompanyActivity, DiscountCustomer, DiscountRequest, WalletTransaction, User, ActivityLog, ReferralWallet, ManagerAccountRequest
 from notifications import notify_user, send_email
 from activity import log_activity
 
 shop_bp = Blueprint('shop', __name__, template_folder='templates', url_prefix='/shop')
+
+
+# =========================================
+# BUYER: DASHBOARD
+# =========================================
+@shop_bp.route('/dashboard')
+@login_required
+def dashboard():
+    if current_user.role != 'buyer':
+        flash('Access denied.', 'danger')
+        return redirect(url_for('shop.products'))
+
+    total_orders = Order.query.filter_by(buyer_id=current_user.id).count()
+    pending_orders = Order.query.filter_by(buyer_id=current_user.id, status='pending').count()
+    total_spent = db.session.query(func.coalesce(func.sum(Order.total_amount), 0)).filter(
+        Order.buyer_id == current_user.id
+    ).scalar() or 0
+    cart_count = CartItem.query.filter_by(user_id=current_user.id).count()
+    recent_orders = Order.query.filter_by(buyer_id=current_user.id).order_by(Order.created_at.desc()).limit(6).all()
+    recent_activities = ActivityLog.query.filter_by(actor_id=current_user.id).order_by(ActivityLog.created_at.desc()).limit(6).all()
+    referral_wallet = ReferralWallet.query.filter_by(user_id=current_user.id).first()
+    referral_tokens = referral_wallet.token_balance if referral_wallet else 0
+    manager_request = ManagerAccountRequest.query.filter_by(user_id=current_user.id).order_by(
+        ManagerAccountRequest.created_at.desc()
+    ).first()
+
+    return render_template(
+        'buyer_dashboard.html',
+        total_orders=total_orders,
+        pending_orders=pending_orders,
+        total_spent=total_spent,
+        cart_count=cart_count,
+        recent_orders=recent_orders,
+        recent_activities=recent_activities,
+        referral_tokens=referral_tokens,
+        manager_request=manager_request
+    )
 
 
 # =========================================
