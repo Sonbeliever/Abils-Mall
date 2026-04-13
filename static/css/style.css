@@ -4263,6 +4263,163 @@ body.dark-mode .dashboard-quick-links .dashboard-inline-btn {
     border-color: rgba(198, 213, 255, 0.72);
 }
 
+/* Glassmorphism refinement: lighter sky-blue glow and stronger typography */
+:root {
+    --primary-color: #6caef5;
+    --primary-hover: #5098e8;
+    --card-background: rgba(255, 255, 255, 0.76);
+    --text-color: #17314c;
+    --text-light: #58708a;
+    --glass-glow: 0 0 44px rgba(120, 205, 239, 0.18), 0 0 92px rgba(144, 220, 241, 0.12);
+}
+
+body.dark-mode {
+    --primary-color: #87d6f4;
+    --primary-hover: #66c8ea;
+    --card-background: rgba(18, 32, 48, 0.66);
+    --text-color: #eef8ff;
+    --text-light: #bfd4e3;
+    --glass-glow: 0 0 54px rgba(117, 214, 242, 0.22), 0 0 104px rgba(151, 231, 245, 0.14);
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(187, 237, 248, 0.34), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(170, 227, 243, 0.26), transparent 28%),
+        var(--background-color);
+}
+
+.site-header,
+.main-nav,
+.sidebar,
+.dashboard-sidebar-glass,
+.dashboard-main-glass,
+.buyer-profile-glass,
+.buyer-stat-card,
+.buyer-progress-card,
+.buyer-panel-card,
+.admin-dashboard .admin-panel,
+.manager-dashboard .admin-panel,
+.manager-dashboard .manager-panel,
+.admin-dashboard .stat-card,
+.manager-dashboard .stat-card,
+.admin-dashboard .admin-table-wrapper,
+.manager-dashboard .admin-table-wrapper,
+.checkout-form,
+.cart-summary,
+.auth-card,
+.auth-hero,
+.review-card,
+.image-lightbox-card {
+    box-shadow: var(--shadow), var(--glass-glow);
+}
+
+.logo,
+.hero-glass h1,
+.page-head,
+.section-title,
+.admin-dashboard .dashboard-head h1,
+.manager-dashboard .page-header h1,
+.buyer-profile-glass h2,
+.buyer-progress-card h3,
+.buyer-panel-card h3,
+.dashboard-sidebar-glass h2,
+.auth-hero h2,
+.auth-card h3,
+.image-lightbox-meta h3,
+.review-head h3,
+.cart-summary h3,
+.panel-header h3 {
+    color: var(--text-color);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.dashboard-sidebar-glass h2,
+.buyer-profile-glass h2,
+.admin-dashboard .dashboard-head h1,
+.manager-dashboard .page-header h1 {
+    text-shadow: 0 8px 24px rgba(126, 201, 229, 0.18);
+}
+
+.hero-tag,
+.dashboard-nav-tag,
+.sidebar-title,
+.stat-card h4,
+.buyer-stat-card span,
+.panel-hint,
+.auth-note {
+    font-weight: 700;
+}
+
+.dashboard-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1800;
+    transition: opacity 0.22s ease;
+}
+
+.dashboard-modal.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dashboard-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 30, 48, 0.26);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.dashboard-modal-card {
+    position: relative;
+    z-index: 1;
+    width: min(92vw, 860px);
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    margin: 0;
+    border-radius: 24px;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.92), rgba(232, 246, 250, 0.78));
+    box-shadow: 0 24px 70px rgba(58, 107, 133, 0.24), var(--glass-glow);
+}
+
+.dashboard-modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.dashboard-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: 1px solid rgba(188, 223, 236, 0.92);
+    background: rgba(255, 255, 255, 0.78);
+    color: var(--text-color);
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(110, 187, 215, 0.18);
+}
+
+.dashboard-modal-close:hover {
+    transform: translateY(-1px);
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
 @media (max-width: 768px) {
     .dashboard-page .main-nav {
         gap: 10px;
@@ -4282,6 +4439,17 @@ body.dark-mode .dashboard-quick-links .dashboard-inline-btn {
 
     .dashboard-nav-icons {
         margin-left: auto;
+    }
+
+    .dashboard-modal {
+        padding: 12px;
+        align-items: flex-end;
+    }
+
+    .dashboard-modal-card {
+        width: 100%;
+        max-height: 92vh;
+        border-radius: 22px 22px 14px 14px;
     }
 
     .dashboard-shell,

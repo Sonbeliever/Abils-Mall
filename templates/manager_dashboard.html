@@ -40,60 +40,6 @@
             </div>
         </div>
 
-        <div class="admin-panel activity-panel manager-panel" id="pickup-panel">
-        <div class="panel-header">
-            <h3>Pickup Location</h3>
-            <span class="panel-hint">Set your company pickup point for distance calculations.</span>
-        </div>
-        <form method="POST" action="{{ url_for('manager.update_pickup_location') }}" class="checkout-form full-form">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Country</label>
-                    <input type="text" name="pickup_country" id="pickup_country" value="{{ company.pickup_country or '' }}">
-                </div>
-                <div class="form-group">
-                    <label>State</label>
-                    <input type="text" name="pickup_state" id="pickup_state" value="{{ company.pickup_state or '' }}">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Area</label>
-                    <input type="text" name="pickup_area" id="pickup_area" value="{{ company.pickup_area or '' }}">
-                </div>
-                <div class="form-group">
-                    <label>Bus Stop</label>
-                    <input type="text" name="pickup_bus_stop" id="pickup_bus_stop" value="{{ company.pickup_bus_stop or '' }}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Pickup Address</label>
-                <textarea name="pickup_address" id="pickup_address">{{ company.pickup_address or '' }}</textarea>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Pickup Latitude</label>
-                    <input type="text" name="pickup_lat" id="pickup_lat" value="{{ company.pickup_lat if company.pickup_lat is not none else '' }}">
-                </div>
-                <div class="form-group">
-                    <label>Pickup Longitude</label>
-                    <input type="text" name="pickup_lng" id="pickup_lng" value="{{ company.pickup_lng if company.pickup_lng is not none else '' }}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Pickup Map Link (optional)</label>
-                <input type="text" name="pickup_map_url" id="pickup_map_url" value="{{ company.pickup_map_url or '' }}">
-            </div>
-            <div class="form-group">
-                <label>Select Pickup on Map</label>
-                <div id="pickup-map" class="pickup-map"></div>
-                <small class="panel-help-text">Click map to set pickup location or allow location access.</small>
-                <button class="btn btn-primary" type="button" id="pickup-autofill-btn" style="margin-top:10px;">Auto Fill Fields from Pin</button>
-            </div>
-            <button class="checkout-btn" type="submit">Save Pickup Location</button>
-        </form>
-        </div>
-
         <div class="dashboard-grid-2">
             <div class="admin-panel manager-panel">
                 <div class="panel-header">
@@ -151,6 +97,67 @@
             </form>
         </div>
     </section>
+</div>
+<div class="dashboard-modal" id="pickup-modal" aria-hidden="true">
+    <div class="dashboard-modal-backdrop" data-close-pickup></div>
+    <div class="dashboard-modal-card admin-panel activity-panel manager-panel" id="pickup-panel" role="dialog" aria-modal="true" aria-labelledby="pickup-panel-title">
+        <div class="dashboard-modal-head">
+            <div class="panel-header">
+                <h3 id="pickup-panel-title">Pickup Location</h3>
+                <span class="panel-hint">Set your company pickup point for distance calculations.</span>
+            </div>
+            <button class="dashboard-modal-close" type="button" id="pickup-close" aria-label="Close pickup location">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+        <form method="POST" action="{{ url_for('manager.update_pickup_location') }}" class="checkout-form full-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" name="pickup_country" id="pickup_country" value="{{ company.pickup_country or '' }}">
+                </div>
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" name="pickup_state" id="pickup_state" value="{{ company.pickup_state or '' }}">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Area</label>
+                    <input type="text" name="pickup_area" id="pickup_area" value="{{ company.pickup_area or '' }}">
+                </div>
+                <div class="form-group">
+                    <label>Bus Stop</label>
+                    <input type="text" name="pickup_bus_stop" id="pickup_bus_stop" value="{{ company.pickup_bus_stop or '' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Pickup Address</label>
+                <textarea name="pickup_address" id="pickup_address">{{ company.pickup_address or '' }}</textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pickup Latitude</label>
+                    <input type="text" name="pickup_lat" id="pickup_lat" value="{{ company.pickup_lat if company.pickup_lat is not none else '' }}">
+                </div>
+                <div class="form-group">
+                    <label>Pickup Longitude</label>
+                    <input type="text" name="pickup_lng" id="pickup_lng" value="{{ company.pickup_lng if company.pickup_lng is not none else '' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Pickup Map Link (optional)</label>
+                <input type="text" name="pickup_map_url" id="pickup_map_url" value="{{ company.pickup_map_url or '' }}">
+            </div>
+            <div class="form-group">
+                <label>Select Pickup on Map</label>
+                <div id="pickup-map" class="pickup-map"></div>
+                <small class="panel-help-text">Click map to set pickup location or allow location access.</small>
+                <button class="btn btn-primary" type="button" id="pickup-autofill-btn" style="margin-top:10px;">Auto Fill Fields from Pin</button>
+            </div>
+            <button class="checkout-btn" type="submit">Save Pickup Location</button>
+        </form>
+    </div>
 </div>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -254,12 +261,37 @@
         }
 
         const pickupToggle = document.getElementById('pickup-toggle');
-        const pickupPanel = document.getElementById('pickup-panel');
-        if (pickupToggle && pickupPanel) {
-            pickupToggle.addEventListener('click', () => {
-                const isOpen = pickupPanel.classList.toggle('open');
-                if (isOpen) {
-                    setTimeout(() => map.invalidateSize(), 50);
+        const pickupModal = document.getElementById('pickup-modal');
+        const pickupClose = document.getElementById('pickup-close');
+        const openPickupModal = () => {
+            if (!pickupModal) return;
+            pickupModal.classList.add('open');
+            pickupModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            setTimeout(() => map.invalidateSize(), 120);
+        };
+        const closePickupModal = () => {
+            if (!pickupModal) return;
+            pickupModal.classList.remove('open');
+            pickupModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+        };
+
+        if (pickupToggle && pickupModal) {
+            pickupToggle.addEventListener('click', openPickupModal);
+        }
+        if (pickupClose) {
+            pickupClose.addEventListener('click', closePickupModal);
+        }
+        if (pickupModal) {
+            pickupModal.addEventListener('click', (event) => {
+                if (event.target.hasAttribute('data-close-pickup')) {
+                    closePickupModal();
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && pickupModal.classList.contains('open')) {
+                    closePickupModal();
                 }
             });
         }

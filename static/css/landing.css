@@ -1,14 +1,14 @@
 :root {
-    --bg-a: #eef2ff;
+    --bg-a: #eefbfd;
     --bg-b: #ffffff;
-    --bg-c: #e7ecff;
-    --panel: rgba(255, 255, 255, 0.68);
-    --panel-soft: rgba(255, 255, 255, 0.5);
-    --stroke: rgba(255, 255, 255, 0.7);
-    --text: #3a2a22;
-    --text-soft: #5d667a;
-    --accent: #88a4ff;
-    --accent-2: #b9ccff;
+    --bg-c: #def4f8;
+    --panel: rgba(255, 255, 255, 0.74);
+    --panel-soft: rgba(255, 255, 255, 0.56);
+    --stroke: rgba(255, 255, 255, 0.78);
+    --text: #16344c;
+    --text-soft: #58708a;
+    --accent: #8fdcf0;
+    --accent-2: #c8f0f6;
 }
 
 * {
@@ -47,7 +47,7 @@ body {
         transform: translateY(0px) scale(1);
     }
     50% {
-        box-shadow: 0 0 34px rgba(118, 214, 255, 0.28), 0 0 68px rgba(201, 133, 255, 0.18);
+        box-shadow: 0 0 38px rgba(118, 214, 255, 0.32), 0 0 72px rgba(157, 234, 242, 0.18);
         transform: translateY(-2px) scale(1.015);
     }
     100% {
@@ -74,7 +74,7 @@ body {
     height: 420px;
     right: -120px;
     top: -80px;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.82), rgba(142, 170, 255, 0.18) 70%);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.84), rgba(145, 223, 242, 0.22) 70%);
     animation: floatPulse 8s ease-in-out infinite;
 }
 
@@ -83,7 +83,7 @@ body {
     height: 460px;
     left: -180px;
     bottom: -140px;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.72), rgba(202, 216, 255, 0.2) 72%);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.76), rgba(184, 232, 244, 0.22) 72%);
     animation: floatPulse 10s ease-in-out infinite;
 }
 
@@ -92,7 +92,7 @@ body {
     height: 320px;
     left: 34%;
     top: 58%;
-    background: radial-gradient(circle at 40% 40%, rgba(148, 173, 255, 0.28), rgba(255, 255, 255, 0.05) 75%);
+    background: radial-gradient(circle at 40% 40%, rgba(147, 222, 239, 0.28), rgba(255, 255, 255, 0.05) 75%);
     animation: floatPulse 9s ease-in-out infinite;
 }
 
@@ -112,7 +112,7 @@ body {
     background: linear-gradient(140deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
     border-radius: 26px;
     backdrop-filter: blur(14px);
-    box-shadow: 0 18px 48px rgba(36, 0, 70, 0.42);
+    box-shadow: 0 18px 48px rgba(77, 131, 156, 0.24), 0 0 70px rgba(154, 226, 243, 0.18);
     overflow: hidden;
     animation: riseIn 0.75s ease;
 }
@@ -215,7 +215,7 @@ body {
     backdrop-filter: blur(10px);
     border-radius: 999px;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
@@ -234,13 +234,13 @@ body {
     font-weight: 700;
     cursor: pointer;
     backdrop-filter: blur(12px);
-    box-shadow: 0 14px 32px rgba(54, 75, 123, 0.14);
+    box-shadow: 0 14px 32px rgba(75, 129, 152, 0.16), 0 0 32px rgba(160, 230, 242, 0.14);
     transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 
 .landing-menu-toggle:hover {
     transform: translateY(-2px);
-    box-shadow: 0 18px 34px rgba(54, 75, 123, 0.18);
+    box-shadow: 0 18px 34px rgba(75, 129, 152, 0.2), 0 0 38px rgba(160, 230, 242, 0.16);
 }
 
 .landing-menu-panel {
@@ -255,7 +255,7 @@ body {
     border: 1px solid var(--stroke);
     background: linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(230, 237, 255, 0.54));
     backdrop-filter: blur(16px);
-    box-shadow: 0 24px 52px rgba(29, 44, 81, 0.2);
+    box-shadow: 0 24px 52px rgba(51, 99, 123, 0.18), 0 0 42px rgba(149, 226, 240, 0.14);
     opacity: 0;
     pointer-events: none;
     transform: translateY(-8px) scale(0.98);
@@ -303,7 +303,7 @@ body {
 
 .glass-card:hover {
     transform: translateY(-4px);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 34px rgba(20, 0, 45, 0.28);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 34px rgba(74, 133, 156, 0.22), 0 0 36px rgba(157, 231, 242, 0.14);
 }
 
 .hero-copy {
@@ -326,6 +326,8 @@ body {
     font-family: "Space Grotesk", "Segoe UI", sans-serif;
     font-size: clamp(1.7rem, 2.6vw, 2.8rem);
     line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.03em;
 }
 
 .hero-copy p {
@@ -382,6 +384,7 @@ body {
     margin: 0 0 10px;
     font-size: 1.1rem;
     font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    font-weight: 800;
 }
 
 .intro-video-copy p {
@@ -416,6 +419,7 @@ body {
     margin: 0 0 10px;
     font-size: 1.02rem;
     font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    font-weight: 800;
 }
 
 .about-card p {
@@ -454,6 +458,7 @@ body {
     margin: 0 0 10px;
     font-size: 1.05rem;
     font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    font-weight: 800;
 }
 
 .hero-panel ul {
@@ -534,6 +539,7 @@ body {
     margin: 0 0 6px;
     font-size: 14px;
     font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    font-weight: 800;
 }
 
 .team-card p {
@@ -578,13 +584,22 @@ body {
         align-items: stretch;
     }
 
-    .landing-nav-brand,
     .landing-menu-toggle {
-        width: 100%;
+        order: 1;
+        width: auto;
+        justify-content: flex-start;
+        align-self: flex-start;
+    }
+
+    .landing-nav-brand {
+        order: 2;
+        width: calc(100% - 74px);
         justify-content: center;
     }
 
     .landing-menu-panel {
+        top: calc(100% + 8px);
+        order: 3;
         left: 0;
         right: 0;
         min-width: 0;
