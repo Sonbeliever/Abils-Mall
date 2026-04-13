@@ -9,6 +9,10 @@
             <a href="{{ url_for('manager.manage_products') }}"><i class="fas fa-boxes-stacked"></i> Manage Products</a>
             <a href="{{ url_for('manager.reports') }}"><i class="fas fa-chart-column"></i> Daily Reports</a>
             <a href="{{ url_for('manager.daily_statement_pdf') }}"><i class="fas fa-file-pdf"></i> Statement PDF</a>
+            <a href="{{ url_for('auth.referrals') }}"><i class="fas fa-gift"></i> Referrals</a>
+            <a href="{{ url_for('auth.profile') }}"><i class="fas fa-user"></i> Profile</a>
+            <a href="{{ url_for('auth.change_password') }}"><i class="fas fa-key"></i> Change Password</a>
+            <a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
             <button class="btn btn-primary dashboard-inline-btn" type="button" id="pickup-toggle"><i class="fas fa-location-dot"></i> Pickup Location</button>
         </div>
     </aside>

@@ -9,10 +9,11 @@
 </head>
 {% set is_auth_page = request.endpoint in ['auth.login', 'auth.register'] %}
 {% set is_market_page = request.endpoint == 'marketplace' %}
+{% set is_dashboard_page = request.endpoint in ['admin.dashboard', 'manager.dashboard', 'shop.dashboard'] %}
 {% set is_simple_page = is_auth_page or is_market_page %}
-<body class="{% if is_auth_page %}auth-simple{% elif is_market_page %}market-simple{% endif %}">
+<body class="{% if is_auth_page %}auth-simple{% elif is_market_page %}market-simple{% elif is_dashboard_page %}dashboard-page{% endif %}">
     <header class="site-header">
-        {% if not is_simple_page %}
+        {% if not is_simple_page and not is_dashboard_page %}
         <div class="top-bar">
             <p>Free shipping on orders over ₦75,000 | New user discount: 10% off</p>
         </div>
@@ -41,6 +42,38 @@
                         <i id="mode-icon" class="fas fa-moon" aria-hidden="true"></i>
                     </button>
                     <a href="{{ url_for('auth.login') }}" class="auth-nav-link">Login</a>
+                </div>
+            {% elif is_dashboard_page %}
+                <div class="dashboard-nav-meta">
+                    <span class="dashboard-nav-tag">
+                        {% if current_user.role == 'admin' %}
+                            Admin Workspace
+                        {% elif current_user.role == 'manager' %}
+                            Manager Workspace
+                        {% else %}
+                            Buyer Workspace
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="nav-icons dashboard-nav-icons">
+                    <button class="mode-toggle mode-icon" id="mode-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+                        <i id="mode-icon" class="fas fa-moon" aria-hidden="true"></i>
+                    </button>
+                    {% if current_user.is_authenticated and current_user.role in ['admin', 'manager', 'buyer'] %}
+                        {% if current_user.role == 'admin' %}
+                            {% set activity_target = url_for('admin.activities') %}
+                        {% elif current_user.role == 'manager' %}
+                            {% set activity_target = url_for('manager.activities') %}
+                        {% else %}
+                            {% set activity_target = url_for('auth.activities') %}
+                        {% endif %}
+                        <button class="bell-btn{% if unread_count is defined and (unread_count|int) > 0 %} bell-animate{% endif %}" id="activity-bell" type="button" aria-label="Show activities" aria-expanded="false" data-activity-target="{{ activity_target }}">
+                            <span class="bell-icon" aria-hidden="true"><i class="fas fa-bell"></i></span>
+                            {% if unread_count is defined and (unread_count|int) > 0 %}
+                                <span class="bell-badge" id="activity-badge">{{ unread_count }}</span>
+                            {% endif %}
+                        </button>
+                    {% endif %}
                 </div>
             {% else %}
                 <button class="sidebar-toggle sidebar-toggle-nav" id="sidebar-toggle" aria-label="Toggle sidebar">
@@ -90,7 +123,7 @@
                 {% endif %}
             {% endwith %}
         </div>
-        {% if is_simple_page %}
+        {% if is_simple_page or is_dashboard_page %}
             <section class="content content-auth">
         {% else %}
             <div class="layout">
@@ -162,7 +195,7 @@
                 <section class="content">
         {% endif %}
                     {% block content %}{% endblock %}
-        {% if is_simple_page %}
+        {% if is_simple_page or is_dashboard_page %}
             </section>
         {% else %}
                 </section>

@@ -4036,6 +4036,37 @@ body.dark-mode .nav-search button {
     color: #2a344f;
 }
 
+/* Dashboard pages use their own internal glass navigation */
+.dashboard-page .content-auth {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding-top: 12px;
+}
+
+.dashboard-nav-meta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-nav-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.64);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(236, 242, 255, 0.54));
+    color: #2f3a57;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 30px rgba(105, 125, 170, 0.16);
+}
+
+.dashboard-nav-icons {
+    gap: 10px;
+}
+
 /* ==============================
    Admin + Manager White Glass Upgrade
    ============================== */
@@ -4233,6 +4264,26 @@ body.dark-mode .dashboard-quick-links .dashboard-inline-btn {
 }
 
 @media (max-width: 768px) {
+    .dashboard-page .main-nav {
+        gap: 10px;
+        align-items: center;
+    }
+
+    .dashboard-nav-meta {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .dashboard-nav-tag {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .dashboard-nav-icons {
+        margin-left: auto;
+    }
+
     .dashboard-shell,
     .dashboard-grid-2 {
         grid-template-columns: 1fr;
@@ -4252,6 +4303,10 @@ body.dark-mode .dashboard-quick-links .dashboard-inline-btn {
 @media (max-width: 992px) {
     .buyer-dashboard-shell {
         grid-template-columns: 1fr;
+    }
+
+    .dashboard-page .content-auth {
+        padding-top: 8px;
     }
 
     .buyer-stat-grid {
