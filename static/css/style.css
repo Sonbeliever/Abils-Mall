@@ -4287,6 +4287,60 @@ body {
         radial-gradient(circle at top left, rgba(187, 237, 248, 0.34), transparent 34%),
         radial-gradient(circle at bottom right, rgba(170, 227, 243, 0.26), transparent 28%),
         var(--background-color);
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    border-radius: 999px;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(2px);
+    opacity: 0.65;
+    animation: appOrbFloat 16s ease-in-out infinite;
+}
+
+body::before {
+    width: 280px;
+    height: 280px;
+    top: 12%;
+    left: -90px;
+    background: radial-gradient(circle at 30% 30%, rgba(207, 245, 251, 0.95), rgba(119, 213, 235, 0.28) 62%, rgba(119, 213, 235, 0.02) 100%);
+}
+
+body::after {
+    width: 420px;
+    height: 420px;
+    right: -150px;
+    bottom: 10%;
+    background: radial-gradient(circle at 30% 30%, rgba(231, 251, 255, 0.92), rgba(132, 218, 238, 0.24) 58%, rgba(132, 218, 238, 0.02) 100%);
+    animation-duration: 20s;
+    animation-direction: reverse;
+}
+
+main,
+.site-header,
+.site-footer {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes appOrbFloat {
+    0%, 100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    25% {
+        transform: translate3d(24px, -20px, 0) scale(1.06);
+    }
+    50% {
+        transform: translate3d(0, -34px, 0) scale(0.96);
+    }
+    75% {
+        transform: translate3d(-22px, -8px, 0) scale(1.04);
+    }
 }
 
 .site-header,
@@ -4390,6 +4444,23 @@ body {
     box-shadow: 0 24px 70px rgba(58, 107, 133, 0.24), var(--glass-glow);
 }
 
+.pickup-map {
+    width: 100%;
+    min-height: 320px;
+    height: 320px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(229, 249, 252, 0.92), rgba(215, 240, 248, 0.78));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72), 0 14px 34px rgba(108, 185, 213, 0.16);
+}
+
+.pickup-map .leaflet-container,
+.pickup-map.leaflet-container {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+}
+
 .dashboard-modal-head {
     display: flex;
     align-items: flex-start;
@@ -4450,6 +4521,11 @@ body.modal-open {
         width: 100%;
         max-height: 92vh;
         border-radius: 22px 22px 14px 14px;
+    }
+
+    .pickup-map {
+        min-height: 270px;
+        height: 270px;
     }
 
     .dashboard-shell,

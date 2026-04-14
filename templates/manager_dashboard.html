@@ -268,7 +268,19 @@
             pickupModal.classList.add('open');
             pickupModal.setAttribute('aria-hidden', 'false');
             document.body.classList.add('modal-open');
-            setTimeout(() => map.invalidateSize(), 120);
+            setTimeout(() => map.invalidateSize(), 80);
+            setTimeout(() => map.invalidateSize(), 220);
+            setTimeout(() => map.invalidateSize(), 420);
+            if ((!pinned || !marker) && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        setPickup(pos.coords.latitude, pos.coords.longitude);
+                        reverseFill(pos.coords.latitude, pos.coords.longitude);
+                        setTimeout(() => map.invalidateSize(), 120);
+                    },
+                    () => {}
+                );
+            }
         };
         const closePickupModal = () => {
             if (!pickupModal) return;

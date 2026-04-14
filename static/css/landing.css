@@ -36,9 +36,18 @@ body {
 }
 
 @keyframes floatPulse {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    25% { transform: translate3d(14px, -12px, 0) scale(1.04); }
+    50% { transform: translate3d(0, -28px, 0) scale(0.96); }
+    75% { transform: translate3d(-16px, -8px, 0) scale(1.05); }
+    100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes seaDrift {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    30% { transform: translate3d(-18px, -14px, 0) scale(1.08); }
+    60% { transform: translate3d(20px, -34px, 0) scale(0.94); }
+    100% { transform: translate3d(0, 0, 0) scale(1); }
 }
 
 @keyframes logoGlow {
@@ -65,8 +74,8 @@ body {
 .orb {
     position: absolute;
     border-radius: 999px;
-    filter: blur(0.2px);
-    opacity: 0.85;
+    filter: blur(1px);
+    opacity: 0.9;
 }
 
 .orb-a {
@@ -94,6 +103,24 @@ body {
     top: 58%;
     background: radial-gradient(circle at 40% 40%, rgba(147, 222, 239, 0.28), rgba(255, 255, 255, 0.05) 75%);
     animation: floatPulse 9s ease-in-out infinite;
+}
+
+.orb-d {
+    width: 160px;
+    height: 160px;
+    left: 12%;
+    top: 24%;
+    background: radial-gradient(circle at 35% 35%, rgba(233, 252, 255, 0.88), rgba(132, 220, 239, 0.24) 58%, rgba(132, 220, 239, 0.02) 100%);
+    animation: seaDrift 11s ease-in-out infinite;
+}
+
+.orb-e {
+    width: 240px;
+    height: 240px;
+    right: 18%;
+    bottom: 16%;
+    background: radial-gradient(circle at 30% 30%, rgba(247, 255, 255, 0.84), rgba(141, 224, 241, 0.2) 60%, rgba(141, 224, 241, 0.03) 100%);
+    animation: seaDrift 14s ease-in-out infinite reverse;
 }
 
 .landing-shell {
